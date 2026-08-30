@@ -22,3 +22,11 @@ Issues = "https://github.com/blm34/human-sudoku-solver/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.5",
+]
+tests = [
+    "pytest>=9.1.1",
+]
