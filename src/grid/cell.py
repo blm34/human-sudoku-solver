@@ -75,9 +75,7 @@ class CellIterators:
         Returns:
             A generator yielding empty cells
         """
-        return tuple(
-            Cell.from_index(idx) for idx in range(81) if self._grid.values[idx] == 0
-        )
+        return tuple(cell for cell in self.cells() if self._grid.cell_empty(cell))
 
     def units(self) -> tuple[tuple[Cell, ...], ...]:
         return tuple(

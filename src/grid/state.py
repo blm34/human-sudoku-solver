@@ -1,48 +1,58 @@
-from .cell import Cell, CellIterators
-from .utils import ALL_DIGITS, digit_mask
+from typing import TYPE_CHECKING
+
+from .utils import ALL_DIGITS
+
+if TYPE_CHECKING:
+    from typing import Self
+    from .cell import Cell
 
 
 class GridState:
-    """Store grid state and provide information about candidates.
+    """Store grid state and provide information about candidates."""
 
-    Methods:
-        write_value
-        remove_candidate
-    """
+    def __init__(self, values: list[int], candidates: list[int]):
+        self._values = values
+        self._candidates = candidates
 
-    def __init__(self, cell_iterators: CellIterators | None = None):
-        # The confirmed value for each cell in the grid (0 means not yet known)
-        self.values = [0] * 81
-        # A bit mask for the candidates for each cell in the grid
-        self.candidates = [ALL_DIGITS] * 81
+    @classmethod
+    def create_empty(cls) -> Self:
+        return cls(
+            values=[0] * 81,
+            candidates=[ALL_DIGITS] * 81,
+        )
 
-        self._cell_iterators = cell_iterators or CellIterators(self)
+    def value(self, cell: Cell) -> int:
+        return self._values[cell.index]
 
-    def write_value(self, value: int, cell: Cell):
-        """Write a value as confirmed to a cell.
+    def write_value(self, cell: Cell, value: int):
+        if not 1 <= value <= 9:
+            raise ValueError(
+                f"Sudoku cell value must be from 1-9, {value} is not valid."
+            )
+        self._values[cell.index] = value
 
-        Writes the value to the cell and updates the candidates in unset cells.
-        Board state is updated to remain consistent.
-
-        Args:
-            value: The value to write to the cell
-            cell: The cell to write the value to
-        """
-        self.values[cell.index] = value
-
-        self.candidates[cell.index] = 0
-
-        for peer in self._cell_iterators.peers(cell):
-            self.remove_candidate(value, peer)
-
-    def remove_candidate(self, value: int, cell: Cell):
-        """Remove a candidate from a cell.
-
-        If the given cell does not have the given candidate, no action is taken.
+    def add_candidates(self, cell: Cell, mask: int):
+        """Add candidates to a cell.
 
         Args:
-            value: The value of the candidate to remove
-            cell: The cell to remove the candidate from
+            cell: The cell to add the candidates to
+            mask: The maks that has ones set for the bits corresponding to the candidates to add
         """
-        mask = ~digit_mask(value)
-        self.candidates[cell.index] &= mask
+        self._candidates[cell.index] |= mask
+
+    def eliminate_candidates(self, cell: Cell, mask: int):
+        """Eliminate candidates from a cell.
+
+        Args:
+            cell: The cell to remove the candidates from
+            mask: The maks that has ones set for the bits corresponding to the candidates to remove
+        """
+        self._candidates[cell.index] &= ~mask
+
+    def is_complete(self) -> bool:
+        """Has the grid been fully filled in."""
+        return all(value != 0 for value in self._values)
+
+    def cell_empty(self, cell: Cell) -> bool:
+        """Returns true if the given cell has no value set."""
+        return self._values[cell.index] == 0
