@@ -266,7 +266,7 @@ class TestCellIterators:
     def test_empty_cells_returns_all_cells_when_all_empty(self):
         # ARRANGE
         grid = Mock()
-        grid.values = [0] * 81
+        grid.cell_empty.return_value = True
         iterator = CellIterators(grid)
 
         # ACT
@@ -278,7 +278,8 @@ class TestCellIterators:
     def test_empty_cells_returns_no_cells_when_all_filled(self):
         # ARRANGE
         grid = Mock()
-        grid.values = [1] * 81
+        grid.cell_empty.return_value = False
+
         iterator = CellIterators(grid)
 
         # ACT
@@ -290,8 +291,8 @@ class TestCellIterators:
     def test_empty_cells_only_returns_empty_cells(self):
         # ARRANGE
         grid = Mock()
-        grid.values = [0] * 81
-        grid.values[7] = 1
+        filled_cell = Cell(5, 5)
+        grid.cell_empty = lambda cell: cell != filled_cell
         iterator = CellIterators(grid)
 
         # ACT
@@ -299,4 +300,4 @@ class TestCellIterators:
 
         # ASSERT
         assert len(cells) == 80
-        assert Cell(0, 7) not in cells
+        assert filled_cell not in cells
