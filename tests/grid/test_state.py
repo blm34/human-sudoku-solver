@@ -1,142 +1,137 @@
-from unittest.mock import Mock
-
 from grid.state import GridState
-from grid.cell import Cell, CellIterators
+from grid.cell import Cell
 from grid.utils import ALL_DIGITS, digit_mask
 
 
-class TestGridStateState:
-    def test_initialises_empty_grid_of_values(self):
+class TestGridState:
+    def test_create_empty_initialises_empty_grid_of_values(self):
         # ARRANGE
-        grid = GridState()
+        grid = GridState.create_empty()
 
         # ASSERT
-        assert len(grid.values) == 81
-        assert all(value == 0 for value in grid.values)
+        assert len(grid._values) == 81
+        assert all(value == 0 for value in grid._values)
 
-    def test_initialises_empty_grid_of_candidates(self):
+    def test_create_empty_initialises_empty_grid_of_candidates(self):
         # ARRANGE
-        grid = GridState()
+        grid = GridState.create_empty()
 
         # ASSERT
-        assert len(grid.candidates) == 81
-        assert all(candidates == ALL_DIGITS for candidates in grid.candidates)
+        assert len(grid._candidates) == 81
+        assert all(candidates == ALL_DIGITS for candidates in grid._candidates)
 
-    def test_uses_supplied_cell_relations(self):
+    def test_value_returns_value_in_given_cell(self):
         # ARRANGE
-        relations = Mock(spec=CellIterators)
+        grid = GridState.create_empty()
+        idx = 5
+        cell = Cell.from_index(idx)
+        grid._values[idx] = 9
 
         # ACT
-        grid = GridState(relations)
+        value = grid.value(cell)
 
         # ASSERT
-        assert grid._cell_iterators is relations
+        assert value == 9
 
-    def test_creates_cell_relations_when_none_supplied(self):
-        # ACT
-        grid = GridState()
-
-        # ASSERT
-        assert isinstance(grid._cell_iterators, CellIterators)
-
-    def test_write_value_stores_value(self):
+    def test_write_value_adds_value_to_array(self):
         # ARRANGE
-        grid = GridState()
-        cell = Cell(3, 4)
+        grid = GridState.create_empty()
+        idx = 5
+        cell = Cell.from_index(idx)
+        value = 1
 
         # ACT
-        grid.write_value(7, cell)
+        grid.write_value(cell, value)
 
         # ASSERT
-        assert grid.values[cell.index] == 7
+        assert grid._values[idx] == value
 
-    def test_write_value_removes_candidate_from_peers(self):
+    def test_add_candidates_stores_new_candidates(self):
         # ARRANGE
-        target = Cell(4, 4)
-        peer = Cell(4, 5)
-        unrelated = Cell(0, 0)
-        digit = 7
+        values = [0] * 81
+        candidates = [0] * 81
+        grid = GridState(values, candidates)
 
-        iterator = Mock(spec=CellIterators)
-        iterator.peers.return_value = (peer,)
+        idx = 17
+        cell = Cell.from_index(idx)
 
-        grid = GridState(iterator)
+        mask = digit_mask(6)
 
         # ACT
-        grid.write_value(digit, target)
+        grid.add_candidates(cell, mask)
 
         # ASSERT
-        mask = digit_mask(7)
-        assert not grid.candidates[peer.index] & mask
-        assert grid.candidates[unrelated.index] & mask
+        assert grid._candidates[idx] == mask
 
-    def test_write_value_sets_targets_candidates_to_zero(self):
+    def test_eliminate_candidates_removes_new_candidates(self):
         # ARRANGE
-        grid = GridState()
-        cell = Cell(0, 0)
+        grid = GridState.create_empty()
+
+        idx = 17
+        cell = Cell.from_index(idx)
+
+        elimination_mask = 0b000100100
+        expected = 0b111011011
 
         # ACT
-        grid.write_value(7, cell)
+        grid.eliminate_candidates(cell, elimination_mask)
 
         # ASSERT
-        assert grid.candidates[cell.index] == 0
+        assert grid._candidates[idx] == expected
 
-    def test_candidate_removed_from_row_peer(self):
+    def test_is_complete_on_empty_grid_is_false(self):
         # ARRANGE
-        grid = GridState()
-
-        target = Cell(0, 0)
-        peer = Cell(0, 8)
-        digit = 5
+        grid = GridState.create_empty()
 
         # ACT
-        grid.write_value(digit, target)
+        complete = grid.is_complete()
 
         # ASSERT
-        mask = digit_mask(digit)
-        assert not grid.candidates[peer.index] & mask
+        assert not complete
 
-    def test_candidate_removed_from_column_peer(self):
+    def test_is_complete_on_a_parial_grid_is_false(self):
         # ARRANGE
-        grid = GridState()
-
-        target = Cell(0, 0)
-        peer = Cell(8, 0)
-        digit = 5
+        grid = GridState.create_empty()
+        for i in range(0, 81, 4):
+            grid._values[i] = (i % 9) + 1
 
         # ACT
-        grid.write_value(digit, target)
+        complete = grid.is_complete()
 
         # ASSERT
-        mask = digit_mask(digit)
-        assert not grid.candidates[peer.index] & mask
+        assert not complete
 
-    def test_candidate_removed_from_box_peer(self):
+    def test_is_complete_on_a_complete_grid_is_true(self):
         # ARRANGE
-        grid = GridState()
-
-        target = Cell(0, 0)
-        peer = Cell(2, 2)
-        digit = 5
+        grid = GridState.create_empty()
+        for i in range(81):
+            grid._values[i] = (i % 9) + 1
 
         # ACT
-        grid.write_value(digit, target)
+        complete = grid.is_complete()
 
         # ASSERT
-        mask = digit_mask(digit)
-        assert not grid.candidates[peer.index] & mask
+        assert complete
 
-    def test_candidate_remains_in_unrelated_cell(self):
+    def test_cell_empty_on_an_empty_cell(self):
         # ARRANGE
-        grid = GridState()
-
-        target = Cell(0, 0)
-        unrelated = Cell(3, 3)
-        digit = 5
+        grid = GridState.create_empty()
+        cell = Cell(5, 5)
 
         # ACT
-        grid.write_value(digit, target)
+        empty = grid.cell_empty(cell)
 
         # ASSERT
-        mask = digit_mask(digit)
-        assert grid.candidates[unrelated.index] & mask
+        assert empty
+
+    def test_cell_empty_on_an_filled_cell(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        cell = Cell(5, 5)
+        grid._values[cell.index] = 5
+
+        # ACT
+        empty = grid.cell_empty(cell)
+
+        # ASSERT
+        assert not empty

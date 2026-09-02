@@ -11,7 +11,7 @@ class TestGridAnalysis:
     def test_uses_supplied_cell_relations(self):
         # ARRANGE
         relations = Mock(spec=CellIterators)
-        state = GridState()
+        state = GridState.create_empty()
 
         # ACT
         grid = GridAnalysis(state, relations)
@@ -21,7 +21,7 @@ class TestGridAnalysis:
 
     def test_creates_cell_relations_when_none_supplied(self):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
 
         # ACT
         grid = GridAnalysis(state)
@@ -32,7 +32,7 @@ class TestGridAnalysis:
     @pytest.mark.parametrize("cell_idx", range(81))
     def test_get_candidates_for_empty_cell_returns_all_digits(self, cell_idx):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
         analysis = GridAnalysis(state)
         cell = Cell.from_index(cell_idx)
 
@@ -45,7 +45,7 @@ class TestGridAnalysis:
     @pytest.mark.parametrize("cell_idx", range(81))
     def test_count_candidates_for_empty_cell_returns_nine(self, cell_idx):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
         analysis = GridAnalysis(state)
         cell = Cell.from_index(cell_idx)
 
@@ -57,7 +57,7 @@ class TestGridAnalysis:
 
     def test_get_cells_with_candidate_returns_all_cells_initially(self):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
         analysis = GridAnalysis(state)
         cells = [Cell(0, col) for col in range(9)]
 
@@ -69,7 +69,7 @@ class TestGridAnalysis:
 
     def test_count_cells_with_candidate_returns_nine_initially(self):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
         analysis = GridAnalysis(state)
         cells = (Cell(0, col) for col in range(9))
 
@@ -81,15 +81,14 @@ class TestGridAnalysis:
 
     def test_get_cells_with_candidate_filters_cells(self):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
         target = Cell(0, 0)
-        written_value = 5
-        state.remove_candidate(written_value, target)
+        state._candidates[target.index] = 0b111101111
         analysis = GridAnalysis(state)
         cells = (Cell(0, col) for col in range(9))
 
         # ACT
-        candidates = analysis.get_cells_with_candidate(cells, written_value)
+        candidates = analysis.get_cells_with_candidate(cells, 5)
 
         # ASSERT
         result = list(candidates)
@@ -99,10 +98,10 @@ class TestGridAnalysis:
 
     def test_count_cells_with_candidate_filters_cells(self):
         # ARRANGE
-        state = GridState()
+        state = GridState.create_empty()
         target = Cell(0, 0)
         written_value = 5
-        state.remove_candidate(written_value, target)
+        state._candidates[target.index] = 0b111101111
         analysis = GridAnalysis(state)
         cells = (Cell(0, col) for col in range(9))
 
@@ -114,14 +113,11 @@ class TestGridAnalysis:
 
     def test_get_candidates_for_cell_returns_only_remaining_candidates(self):
         # ARRANGE
-        state = GridState()
-        state.write_value(2, Cell(0, 0))
-        state.write_value(5, Cell(0, 1))
-        state.write_value(9, Cell(0, 2))
+        state = GridState.create_empty()
+        cell = Cell(0, 3)
+        state._candidates[cell.index] = 0b011101101
 
         analysis = GridAnalysis(state)
-
-        cell = Cell(0, 3)
 
         # ACT
         candidates = list(analysis.get_candidates_for_cell(cell))
@@ -131,14 +127,11 @@ class TestGridAnalysis:
 
     def test_count_candidates_for_cell_returns_remaining_count(self):
         # ARRANGE
-        state = GridState()
-        state.write_value(2, Cell(0, 0))
-        state.write_value(5, Cell(0, 1))
-        state.write_value(9, Cell(0, 2))
+        state = GridState.create_empty()
+        cell = Cell(0, 3)
+        state._candidates[cell.index] = 0b011101101
 
         analysis = GridAnalysis(state)
-
-        cell = Cell(0, 3)
 
         # ACT
         count = analysis.count_candidates_in_cell(cell)

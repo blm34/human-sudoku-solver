@@ -8,7 +8,7 @@ def test_writes_values_to_stream():
     # ARRANGE
     values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 
-    grid = Mock(values=values)
+    grid = Mock(_values=values)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -22,7 +22,7 @@ def test_writes_values_to_stream():
 
 def test_writes_empty_cells_as_dots():
     # ARRANGE
-    grid = Mock(values=[0] * 81)
+    grid = Mock(_values=[0] * 81)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -41,7 +41,7 @@ def test_writes_zero_and_values_correctly():
     values[40] = 7
     values[80] = 3
 
-    grid = Mock(values=values)
+    grid = Mock(_values=values)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -62,7 +62,7 @@ def test_writes_values_in_grid_order():
     # ARRANGE
     values = list(range(1, 10)) * 9
 
-    grid = Mock(values=values)
+    grid = Mock(_values=values)
     stream = StringIO()
 
     writer = SusserWriter()

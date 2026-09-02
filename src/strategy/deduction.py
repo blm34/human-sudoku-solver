@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from grid import Cell
 
 
-@dataclass
+@dataclass(frozen=True)
 class AbsDeduction(ABC):
     """Abstract class for the result of a strategy."""
 
@@ -14,14 +14,14 @@ class AbsDeduction(ABC):
     explanation: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class EliminationDeduction(AbsDeduction):
     """Result of a strategy that allows candidates to be eliminated."""
 
     eliminations: list[tuple[Cell, int]]
 
 
-@dataclass
+@dataclass(frozen=True)
 class DigitDeduction(AbsDeduction):
     """Result of a strategy that allows a cell to be filled in."""
 

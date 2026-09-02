@@ -34,7 +34,9 @@ class GridAnalysis:
         """
         candidate_mask = digit_mask(digit)
         return tuple(
-            cell for cell in cells if self._grid.candidates[cell.index] & candidate_mask
+            cell
+            for cell in cells
+            if self._grid._candidates[cell.index] & candidate_mask
         )
 
     def count_cells_with_candidate(self, cells: Iterable[Cell], digit: int) -> int:
@@ -58,7 +60,7 @@ class GridAnalysis:
         Args:
             cell: The cell to get the candidates for
         """
-        candidates = self._grid.candidates[cell.index]
+        candidates = self._grid._candidates[cell.index]
         return tuple(digit for digit in range(1, 10) if candidates & 1 << (digit - 1))
 
     def count_candidates_in_cell(self, cell: Cell) -> int:
@@ -67,5 +69,5 @@ class GridAnalysis:
         Args:
             cell: The cell to count candidates in
         """
-        candidates = self._grid.candidates[cell.index]
+        candidates = self._grid._candidates[cell.index]
         return candidates.bit_count()

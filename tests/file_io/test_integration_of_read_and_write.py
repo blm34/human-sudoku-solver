@@ -7,8 +7,8 @@ from grid import GridState
 
 def test_susser_round_trip():
     # ARRANGE
-    original = GridState()
-    original.values = list(range(1, 10)) * 9
+    original = GridState.create_empty()
+    original._values = list(range(1, 10)) * 9
 
     stream = StringIO()
 
@@ -20,4 +20,4 @@ def test_susser_round_trip():
     result = SusserReader().read(stream)
 
     # ASSERT
-    assert result.values == original.values
+    assert result._values == original._values
