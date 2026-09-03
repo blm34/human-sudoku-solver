@@ -1,5 +1,5 @@
-from grid.state import GridState
 from grid.cell import Cell
+from grid.state import GridState
 from grid.utils import ALL_DIGITS, digit_mask
 
 

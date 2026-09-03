@@ -68,4 +68,4 @@ def test_reader_receives_file_stream(tmp_path):
         file_reader.load(path)
 
     # ASSERT
-    reader.read.assert_called_once
+    reader.read.assert_called_once()

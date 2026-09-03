@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 
-from .state import GridState
 from .cell import Cell, CellIterators
+from .state import GridState
 from .utils import digit_mask
 
 if TYPE_CHECKING:
-    from typing import Iterable
+    from collections.abc import Iterable
 
 
 class GridAnalysis:

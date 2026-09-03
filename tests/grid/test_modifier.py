@@ -1,8 +1,8 @@
 from unittest.mock import Mock
 
-from grid.state import GridState
 from grid.cell import Cell, CellIterators
 from grid.modifier import GridModifier
+from grid.state import GridState
 from grid.utils import digit_mask
 from strategy.deduction import DigitDeduction, EliminationDeduction
 

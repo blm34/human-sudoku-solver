@@ -3,10 +3,11 @@ from typing import TYPE_CHECKING
 from strategy.deduction import DigitDeduction, EliminationDeduction
 
 from .cell import CellIterators
-from .utils import digit_mask, ALL_DIGITS
+from .utils import ALL_DIGITS, digit_mask
 
 if TYPE_CHECKING:
     from strategy.deduction import AbsDeduction
+
     from .cell import Cell
     from .state import GridState
 

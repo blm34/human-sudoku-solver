@@ -1,9 +1,7 @@
 from typing import TYPE_CHECKING
 
-
 from .abs_strategy import AbsStrategy
 from .deduction import DigitDeduction
-
 
 if TYPE_CHECKING:
     from grid import Cell, GridAnalysis
