@@ -1,4 +1,4 @@
-name: Python tests
+name: Continuous Integration
 
 on:
   push:
@@ -26,3 +26,24 @@ jobs:
 
       - name: Run tests
         run: uv run --python ${{ matrix.python-version }} pytest
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install dependencies
+        run: uv sync --python 3.14 --group dev
+
+      - name: Run Ruff
+        run: uv run ruff check .
+
+      - name: Check Ruff formatting
+        run: uv run ruff format --check .
