@@ -9,11 +9,11 @@ up to 81, the following preference list is used: '0', '.', 'X', '*', '_', ' '
 
 from typing import TYPE_CHECKING
 
-
 from .interface import AbsSudokuWriter
 
 if TYPE_CHECKING:
     from typing import TextIO
+
     from grid import GridState
 
 

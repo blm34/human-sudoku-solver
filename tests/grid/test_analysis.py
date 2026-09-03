@@ -3,8 +3,8 @@ from unittest.mock import Mock
 import pytest
 
 from grid.analysis import GridAnalysis
-from grid.state import GridState
 from grid.cell import Cell, CellIterators
+from grid.state import GridState
 
 
 class TestGridAnalysis:

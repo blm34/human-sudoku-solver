@@ -4,8 +4,9 @@ from strategy.abs_strategy import AbsStrategy
 from strategy.deduction import DigitDeduction
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
+
     from grid import Cell, GridAnalysis
-    from typing import Callable, Iterable
 
     UnitGetter = Callable[[int], Iterable[Cell]]
 

@@ -1,11 +1,11 @@
-from .state import GridState
 from .analysis import GridAnalysis
 from .cell import Cell
 from .modifier import GridModifier
+from .state import GridState
 
 __all__ = [
     "Cell",
     "GridAnalysis",
-    "GridState",
     "GridModifier",
+    "GridState",
 ]

@@ -4,7 +4,9 @@ from .readers import SusserReader
 
 if TYPE_CHECKING:
     from pathlib import Path
+
     from grid import GridState
+
     from .readers.interface import AbsSudokuReader
 
 

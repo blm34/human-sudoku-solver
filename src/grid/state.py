@@ -4,6 +4,7 @@ from .utils import ALL_DIGITS
 
 if TYPE_CHECKING:
     from typing import Self
+
     from .cell import Cell
 
 

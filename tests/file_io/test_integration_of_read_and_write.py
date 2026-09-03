@@ -1,8 +1,8 @@
 from io import StringIO
 
+from grid import GridState
 from persistance.readers.susser import SusserReader
 from persistance.writers.susser import SusserWriter
-from grid import GridState
 
 
 def test_susser_round_trip():

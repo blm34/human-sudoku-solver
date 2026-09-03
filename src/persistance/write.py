@@ -4,7 +4,9 @@ from .writers import SusserWriter
 
 if TYPE_CHECKING:
     from pathlib import Path
+
     from grid import GridState
+
     from .writers.interface import AbsSudokuWriter
 
 

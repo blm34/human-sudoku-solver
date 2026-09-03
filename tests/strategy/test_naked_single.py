@@ -11,7 +11,7 @@ def test_finds_naked_single():
 
     analysis.iterate.empty_cells.return_value = [cell]
     analysis.count_candidates_in_cell.return_value = 1
-    analysis.get_candidates_for_cell.return_value = tuple([5])
+    analysis.get_candidates_for_cell.return_value = (5,)
 
     # ACT
     deduction = NakedSingleStrategy().find(analysis)

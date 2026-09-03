@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Self
+
     from .state import GridState
 
 
@@ -58,7 +59,7 @@ class CellIterators:
         peers
     """
 
-    def __init__(self, grid: "GridState"):
+    def __init__(self, grid: GridState):
         self._grid = grid
 
     def cells(self) -> tuple[Cell, ...]:
