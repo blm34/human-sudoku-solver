@@ -27,6 +27,7 @@ where = ["src"]
 [dependency-groups]
 dev = [
     "ruff>=0.16.5",
+    "ty>=0.0.78",
 ]
 tests = [
     "pytest>=9.1.1",
