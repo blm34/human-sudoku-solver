@@ -57,3 +57,10 @@ class GridState:
     def cell_empty(self, cell: Cell) -> bool:
         """Returns true if the given cell has no value set."""
         return self._values[cell.index] == 0
+
+    def copy(self) -> GridState:
+        """Returns a deep copy of the current grid state."""
+        return GridState(
+            values=self._values.copy(),
+            candidates=self._candidates.copy(),
+        )

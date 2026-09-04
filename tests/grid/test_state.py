@@ -135,3 +135,59 @@ class TestGridState:
 
         # ASSERT
         assert not empty
+
+    def test_copy_returns_same_values_and_candidates(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+
+        grid.write_value(Cell(0, 0), 5)
+        grid.eliminate_candidates(Cell(1, 1), 0b000001000)
+
+        # ACT
+        copy = grid.copy()
+
+        # ASSERT
+        assert copy.value(Cell(0, 0)) == 5
+        assert copy._candidates[Cell(1, 1).index] == 0b111110111
+
+        assert copy._candidates == grid._candidates
+        assert copy._values == grid._values
+
+    def test_copy_has_independent_values(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        grid.write_value(Cell(0, 0), 5)
+
+        # ACT
+        copy = grid.copy()
+        copy.write_value(Cell(0, 0), 7)
+
+        # ASSERT
+        assert copy.value(Cell(0, 0)) == 7
+        assert grid.value(Cell(0, 0)) == 5
+
+    def test_copy_has_independent_candidates(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        cell = Cell(0, 0)
+
+        # ACT
+        copy = grid.copy()
+        copy.eliminate_candidates(cell, 0b000001000)
+
+        # ASSERT
+        assert copy._candidates[cell.index] != grid._candidates[cell.index]
+        assert grid._candidates[cell.index] == ALL_DIGITS
+
+    def test_changes_to_original_do_not_affect_copy(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        copy = grid.copy()
+
+        # ACT
+        grid.write_value(Cell(0, 0), 5)
+        grid.eliminate_candidates(Cell(1, 1), 1 << 4)
+
+        # ASSERT
+        assert copy.value(Cell(0, 0)) == 0
+        assert copy._candidates[Cell(1, 1).index] == ALL_DIGITS
