@@ -32,6 +32,15 @@ class GridState:
             )
         self._values[cell.index] = value
 
+    def candidates(self, cell: Cell) -> int:
+        """Get the candidates for the given cell.
+
+        Candidates are returned as a bit mask with the most significant bit
+        representing 9 and the least significant bit representing 1. 1 is used
+        for bits that represent candidates, 0 for bits representing numbers
+        that are not candidates."""
+        return self._candidates[cell.index]
+
     def add_candidates(self, cell: Cell, mask: int):
         """Add candidates to a cell.
 

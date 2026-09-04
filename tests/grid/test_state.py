@@ -46,6 +46,20 @@ class TestGridState:
         # ASSERT
         assert grid._values[idx] == value
 
+    def test_candidates_returns_mask_for_given_cell(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        idx = 5
+        cell = Cell.from_index(idx)
+        set_candidates = 0b001100110
+        grid._candidates[idx] = set_candidates
+
+        # ACT
+        candidates = grid.candidates(cell)
+
+        # ASSERT
+        assert candidates == set_candidates
+
     def test_add_candidates_stores_new_candidates(self):
         # ARRANGE
         values = [0] * 81
@@ -148,7 +162,7 @@ class TestGridState:
 
         # ASSERT
         assert copy.value(Cell(0, 0)) == 5
-        assert copy._candidates[Cell(1, 1).index] == 0b111110111
+        assert copy.candidates(Cell(1, 1)) == 0b111110111
 
         assert copy._candidates == grid._candidates
         assert copy._values == grid._values
@@ -176,8 +190,8 @@ class TestGridState:
         copy.eliminate_candidates(cell, 0b000001000)
 
         # ASSERT
-        assert copy._candidates[cell.index] != grid._candidates[cell.index]
-        assert grid._candidates[cell.index] == ALL_DIGITS
+        assert copy.candidates(cell) != grid.candidates(cell)
+        assert grid.candidates(cell) == ALL_DIGITS
 
     def test_changes_to_original_do_not_affect_copy(self):
         # ARRANGE
@@ -190,4 +204,4 @@ class TestGridState:
 
         # ASSERT
         assert copy.value(Cell(0, 0)) == 0
-        assert copy._candidates[Cell(1, 1).index] == ALL_DIGITS
+        assert copy.candidates(Cell(1, 1)) == ALL_DIGITS
