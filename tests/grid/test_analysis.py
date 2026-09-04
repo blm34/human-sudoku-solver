@@ -10,7 +10,7 @@ from grid.state import GridState
 class TestGridAnalysis:
     def test_uses_supplied_cell_relations(self):
         # ARRANGE
-        relations = Mock(spec=CellIterators)
+        relations = Mock()
         state = GridState.create_empty()
 
         # ACT

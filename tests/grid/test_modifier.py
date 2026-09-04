@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from grid.cell import Cell, CellIterators
+from grid.cell import Cell
 from grid.modifier import GridModifier
 from grid.state import GridState
 from grid.utils import digit_mask
@@ -27,7 +27,7 @@ class TestGridModifier:
         unrelated = Cell(0, 0)
         digit = 7
 
-        iterator = Mock(spec=CellIterators)
+        iterator = Mock()
         iterator.peers.return_value = (peer,)
 
         grid = GridState.create_empty()
