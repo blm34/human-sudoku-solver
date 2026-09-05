@@ -9,15 +9,33 @@ if TYPE_CHECKING:
 class GridState:
     """Store grid state and provide information about candidates."""
 
-    def __init__(self, values: list[int], candidates: list[int]):
+    def __init__(
+        self,
+        values: list[int],
+        candidates: list[int],
+        puzzle_values: tuple[int, ...],
+    ):
         self._values = values
         self._candidates = candidates
+        self._puzzle_values = puzzle_values
 
     @classmethod
     def create_empty(cls) -> Self:
         return cls(
             values=[0] * 81,
             candidates=[0] * 81,
+            puzzle_values=tuple([0] * 81),
+        )
+
+    @classmethod
+    def new_puzzle(cls, puzzle_values: tuple[int, ...]) -> Self:
+        if len(puzzle_values) != 81:
+            raise ValueError("Sudoku puzzle must have 81 cells.")
+
+        return cls(
+            values=list(puzzle_values),
+            candidates=[0] * 81,
+            puzzle_values=puzzle_values,
         )
 
     def value(self, cell: Cell) -> int:
@@ -29,6 +47,9 @@ class GridState:
                 f"Sudoku cell value must be from 1-9, {value} is not valid."
             )
         self._values[cell.index] = value
+
+    def puzzle_value(self, cell: Cell) -> int:
+        return self._puzzle_values[cell.index]
 
     def candidates(self, cell: Cell) -> int:
         """Get the candidates for the given cell.
@@ -70,4 +91,10 @@ class GridState:
         return GridState(
             values=self._values.copy(),
             candidates=self._candidates.copy(),
+            puzzle_values=self._puzzle_values,
         )
+
+    def reset(self):
+        """Clear all user entered values and candidates."""
+        self._values = list(self._puzzle_values)
+        self._candidates = [0] * 81
