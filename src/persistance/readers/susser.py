@@ -9,7 +9,7 @@ up to 81, the following preference list is used: '0', '.', 'X', '*', '_', ' '
 
 from typing import TYPE_CHECKING
 
-from grid import Cell, GridModifier, GridState
+from grid import GridState
 
 from .interface import AbsSudokuReader
 
@@ -25,17 +25,15 @@ class SusserReader(AbsSudokuReader):
             raise ValueError(f"Expected 81 characters but got {len(text)}")
 
         empty = self._get_empty_character(text)
-        grid = GridState.create_empty()
-        grid_modifier = GridModifier(grid)
 
-        for idx, char in enumerate(text):
+        values = []
+        for char in text:
             if char == empty:
-                continue
+                values.append(0)
+            else:
+                values.append(int(char))
 
-            cell = Cell.from_index(idx)
-            grid_modifier.write_value(int(char), cell)
-
-        return grid
+        return GridState.new_puzzle(tuple(values))
 
     # TODO: This should work for any character - not just the 'prefered' ones
     def _get_empty_character(self, text: str) -> str:
