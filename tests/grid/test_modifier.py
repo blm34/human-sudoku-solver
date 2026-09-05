@@ -10,6 +10,36 @@ from strategy.deduction import DigitDeduction, EliminationDeduction
 
 
 class TestGridModifier:
+    def test_add_value_writes_the_value_to_the_cell(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        modifier = GridModifier(grid)
+        modifier.write_value = Mock()
+
+        value = 5
+        cell = Cell(4, 6)
+
+        # ACT
+        modifier.add_value(value, cell)
+
+        # ASSERT
+        modifier.write_value.assert_called_once_with(value, cell)
+
+    def test_add_value_eliminates_the_relevant_candidates(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        modifier = GridModifier(grid)
+        modifier.update_candidates = Mock()
+
+        value = 5
+        cell = Cell(4, 6)
+
+        # ACT
+        modifier.add_value(value, cell)
+
+        # ASSERT
+        modifier.update_candidates.assert_called_once_with(value, cell)
+
     def test_write_value_stores_value(self):
         # ARRANGE
         grid = GridState.create_empty()
@@ -22,7 +52,7 @@ class TestGridModifier:
         # ASSERT
         assert grid._values[cell.index] == 7
 
-    def test_write_value_removes_candidate_from_peers(self):
+    def test_update_candidates_removes_candidate_from_peers(self):
         # ARRANGE
         target = Cell(4, 4)
         peer = Cell(4, 5)
@@ -37,26 +67,26 @@ class TestGridModifier:
         modifier = GridModifier(grid, iterator)
 
         # ACT
-        modifier.write_value(digit, target)
+        modifier.update_candidates(digit, target)
 
         # ASSERT
         mask = digit_mask(7)
         assert not grid.candidates(peer) & mask
         assert grid.candidates(unrelated) & mask
 
-    def test_write_value_sets_targets_candidates_to_zero(self):
+    def test_update_candidates_sets_targets_candidates_to_zero(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
         cell = Cell(0, 0)
 
         # ACT
-        modifier.write_value(7, cell)
+        modifier.update_candidates(7, cell)
 
         # ASSERT
         assert grid.candidates(cell) == 0
 
-    def test_write_value_removes_candidate_from_row_peer(self):
+    def test_update_candidates_removes_candidate_from_row_peer(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
@@ -66,13 +96,13 @@ class TestGridModifier:
         digit = 5
 
         # ACT
-        modifier.write_value(digit, target)
+        modifier.update_candidates(digit, target)
 
         # ASSERT
         mask = digit_mask(digit)
         assert not grid.candidates(peer) & mask
 
-    def test_write_value_removes_candidate_from_column_peer(self):
+    def test_update_candidates_removes_candidate_from_column_peer(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
@@ -82,13 +112,13 @@ class TestGridModifier:
         digit = 5
 
         # ACT
-        modifier.write_value(digit, target)
+        modifier.update_candidates(digit, target)
 
         # ASSERT
         mask = digit_mask(digit)
         assert not grid.candidates(peer) & mask
 
-    def test_write_value_removes_candidate_from_box_peer(self):
+    def test_update_candidates_removes_candidate_from_box_peer(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
@@ -98,13 +128,13 @@ class TestGridModifier:
         digit = 5
 
         # ACT
-        modifier.write_value(digit, target)
+        modifier.update_candidates(digit, target)
 
         # ASSERT
         mask = digit_mask(digit)
         assert not grid.candidates(peer) & mask
 
-    def test_write_value_doesnt_remove_candidate_from_unrelated_cell(self):
+    def test_update_candidates_doesnt_remove_candidate_from_unrelated_cell(self):
         # ARRANGE
         grid = GridState.create_empty()
         grid._candidates = [ALL_DIGITS] * 81
@@ -115,7 +145,7 @@ class TestGridModifier:
         digit = 5
 
         # ACT
-        modifier.write_value(digit, target)
+        modifier.update_candidates(digit, target)
 
         # ASSERT
         mask = digit_mask(digit)

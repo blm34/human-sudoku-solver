@@ -25,8 +25,8 @@ class GridModifier:
         self._state = state
         self._cell_iterators = cell_iterators or CellIterators(state)
 
-    def write_value(self, value: int, cell: Cell):
-        """Write a value as confirmed to a cell.
+    def add_value(self, value: int, cell: Cell):
+        """Write a value to a cell and update relevant candidates.
 
         Writes the value to the cell and updates the candidates in unset cells.
         Board state is updated to remain consistent.
@@ -35,8 +35,25 @@ class GridModifier:
             value: The value to write to the cell
             cell: The cell to write the value to
         """
+        self.write_value(value, cell)
+        self.update_candidates(value, cell)
+
+    def write_value(self, value: int, cell: Cell):
+        """Write a value to a cell.
+
+        Args:
+            value: The value to write to the cell
+            cell: The cell to write the value to
+        """
         self._state.write_value(cell, value)
 
+    def update_candidates(self, value: int, cell: Cell):
+        """Update candidates based on a value in a cell.
+
+        Args:
+            value: The value in the cell causing eliminations
+            cell: The cell whose peers are to be updated
+        """
         self._state.eliminate_candidates(cell, ALL_DIGITS)
 
         for peer in self._cell_iterators.peers(cell):
@@ -104,7 +121,7 @@ class GridModifier:
             self._apply_elimination_deduction(deduction)
 
     def _apply_digit_deduction(self, deduction: DigitDeduction):
-        self.write_value(deduction.digit, deduction.cell)
+        self.add_value(deduction.digit, deduction.cell)
 
     def _apply_elimination_deduction(self, deduction: EliminationDeduction):
         for cell, digit in deduction.eliminations:
@@ -118,4 +135,4 @@ class GridModifier:
         for cell in self._cell_iterators.cells():
             value = self._state.value(cell)
             if value != 0:
-                self.write_value(value, cell)
+                self.update_candidates(value, cell)
