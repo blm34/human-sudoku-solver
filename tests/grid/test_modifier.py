@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from grid.cell import Cell, CellIterators
+from grid.cell import Cell
 from grid.modifier import GridModifier
 from grid.state import GridState
 from grid.utils import digit_mask
@@ -27,7 +27,7 @@ class TestGridModifier:
         unrelated = Cell(0, 0)
         digit = 7
 
-        iterator = Mock(spec=CellIterators)
+        iterator = Mock()
         iterator.peers.return_value = (peer,)
 
         grid = GridState.create_empty()
@@ -38,8 +38,8 @@ class TestGridModifier:
 
         # ASSERT
         mask = digit_mask(7)
-        assert not grid._candidates[peer.index] & mask
-        assert grid._candidates[unrelated.index] & mask
+        assert not grid.candidates(peer) & mask
+        assert grid.candidates(unrelated) & mask
 
     def test_write_value_sets_targets_candidates_to_zero(self):
         # ARRANGE
@@ -51,7 +51,7 @@ class TestGridModifier:
         modifier.write_value(7, cell)
 
         # ASSERT
-        assert grid._candidates[cell.index] == 0
+        assert grid.candidates(cell) == 0
 
     def test_write_value_removes_candidate_from_row_peer(self):
         # ARRANGE
@@ -67,7 +67,7 @@ class TestGridModifier:
 
         # ASSERT
         mask = digit_mask(digit)
-        assert not grid._candidates[peer.index] & mask
+        assert not grid.candidates(peer) & mask
 
     def test_write_value_removes_candidate_from_column_peer(self):
         # ARRANGE
@@ -83,7 +83,7 @@ class TestGridModifier:
 
         # ASSERT
         mask = digit_mask(digit)
-        assert not grid._candidates[peer.index] & mask
+        assert not grid.candidates(peer) & mask
 
     def test_write_value_removes_candidate_from_box_peer(self):
         # ARRANGE
@@ -99,7 +99,7 @@ class TestGridModifier:
 
         # ASSERT
         mask = digit_mask(digit)
-        assert not grid._candidates[peer.index] & mask
+        assert not grid.candidates(peer) & mask
 
     def test_write_value_doesnt_remove_candidate_from_unrelated_cell(self):
         # ARRANGE
@@ -115,7 +115,7 @@ class TestGridModifier:
 
         # ASSERT
         mask = digit_mask(digit)
-        assert grid._candidates[unrelated.index] & mask
+        assert grid.candidates(unrelated) & mask
 
     def test_remove_candidate_removes_a_candidate(self):
         # ARRANGE
@@ -129,7 +129,7 @@ class TestGridModifier:
         modifier.remove_candidate(4, cell)
 
         # ASSERT
-        assert grid._candidates[cell.index] == 0b110010001
+        assert grid.candidates(cell) == 0b110010001
 
     def test_add_candidate_adds_a_candidate(self):
         # ARRANGE
@@ -143,7 +143,7 @@ class TestGridModifier:
         modifier.add_candidate(7, cell)
 
         # ASSERT
-        assert grid._candidates[cell.index] == 0b111011001
+        assert grid.candidates(cell) == 0b111011001
 
     def test_apply_with_a_digit_deduction_adds_the_value(self):
         # ARRANGE
@@ -172,7 +172,7 @@ class TestGridModifier:
         modifier.apply(deduction)
 
         # ASSERT
-        assert grid._candidates[cell.index] == 0b111101111
+        assert grid.candidates(cell) == 0b111101111
 
     def test_apply_elimination_deduction_with_multiple_eliminations(self):
         # ARRANGE
@@ -193,5 +193,5 @@ class TestGridModifier:
         modifier.apply(deduction)
 
         # ASSERT
-        assert grid._candidates[cell_1.index] == 0b111111000
-        assert grid._candidates[cell_2.index] == 0b101111111
+        assert grid.candidates(cell_1) == 0b111111000
+        assert grid.candidates(cell_2) == 0b101111111
