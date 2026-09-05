@@ -6,6 +6,8 @@ from .cell import CellIterators
 from .utils import ALL_DIGITS, digit_mask
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from strategy.deduction import AbsDeduction
 
     from .cell import Cell
@@ -40,6 +42,13 @@ class GridModifier:
         for peer in self._cell_iterators.peers(cell):
             self.remove_candidate(value, peer)
 
+    def _get_candidate_mask(self, values: Iterable[int]) -> int:
+        """Takes a list of values from 1-9 and turn them into a candidate bit mask."""
+        mask = 0
+        for digit in values:
+            mask |= digit_mask(digit)
+        return mask
+
     def remove_candidate(self, value: int, cell: Cell):
         """Remove a candidate from a cell.
 
@@ -52,6 +61,16 @@ class GridModifier:
         mask = digit_mask(value)
         self._state.eliminate_candidates(cell, mask)
 
+    def remove_candidates(self, values: Iterable[int], cell: Cell):
+        """Remove candidates from a cell.
+
+        Args:
+            values: A list of candidates to remove from the cell
+            cell: The cell to remove the candidates from
+        """
+        mask = self._get_candidate_mask(values)
+        self._state.eliminate_candidates(cell, mask)
+
     def add_candidate(self, value: int, cell: Cell):
         """Add a cadidate to a cell.
 
@@ -60,6 +79,16 @@ class GridModifier:
             cell: The cell to add the candidate to
         """
         mask = digit_mask(value)
+        self._state.add_candidates(cell, mask)
+
+    def add_candidates(self, values: Iterable[int], cell: Cell):
+        """Add candidates to a cell.
+
+        Args:
+            values: A list of candidates to add to the cell
+            cell: The cell to add the candidates to
+        """
+        mask = self._get_candidate_mask(values)
         self._state.add_candidates(cell, mask)
 
     def apply(self, deduction: AbsDeduction):
