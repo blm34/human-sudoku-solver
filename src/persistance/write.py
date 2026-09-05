@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from .writers import SusserWriter
+from .writers import JsonWriter, SusserWriter
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 WRITERS = {
     ".txt": SusserWriter,
+    ".json": JsonWriter,
 }
 
 

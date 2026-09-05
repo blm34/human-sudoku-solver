@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from .readers import SusserReader
+from .readers import JsonReader, SusserReader
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 READERS = {
     ".txt": SusserReader,
+    ".json": JsonReader,
 }
 
 
