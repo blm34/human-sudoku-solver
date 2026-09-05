@@ -4,11 +4,7 @@ from sudoku_lib.strategy.abs_strategy import AbsStrategy
 from sudoku_lib.strategy.deduction import DigitDeduction
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
-
     from sudoku_lib.grid import Cell, GridAnalysis
-
-    UnitGetter = Callable[[int], Iterable[Cell]]
 
 
 class HiddenSingleStrategy(AbsStrategy):
