@@ -1,8 +1,8 @@
 from io import StringIO
 
-from grid import GridState
-from persistance.readers import JsonReader, SusserReader
-from persistance.writers import JsonWriter, SusserWriter
+from sudoku_lib.grid import GridState
+from sudoku_lib.persistance.readers import JsonReader, SusserReader
+from sudoku_lib.persistance.writers import JsonWriter, SusserWriter
 
 
 def test_susser_round_trip():

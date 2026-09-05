@@ -2,10 +2,10 @@ from unittest.mock import Mock
 
 import pytest
 
-from grid.analysis import GridAnalysis
-from grid.cell import Cell, CellIterators
-from grid.state import GridState
-from grid.utils import ALL_DIGITS
+from sudoku_lib.grid.analysis import GridAnalysis
+from sudoku_lib.grid.cell import Cell, CellIterators
+from sudoku_lib.grid.state import GridState
+from sudoku_lib.grid.utils import ALL_DIGITS
 
 
 class TestGridAnalysis:

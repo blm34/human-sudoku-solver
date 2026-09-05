@@ -4,7 +4,7 @@ from .abs_strategy import AbsStrategy
 from .deduction import DigitDeduction
 
 if TYPE_CHECKING:
-    from grid import Cell, GridAnalysis
+    from sudoku_lib.grid import Cell, GridAnalysis
 
 
 class NakedSingleStrategy(AbsStrategy):

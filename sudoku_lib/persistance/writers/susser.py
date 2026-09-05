@@ -14,7 +14,7 @@ from .interface import AbsSudokuWriter
 if TYPE_CHECKING:
     from typing import TextIO
 
-    from grid import GridState
+    from sudoku_lib.grid import GridState
 
 
 class SusserWriter(AbsSudokuWriter):

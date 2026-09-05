@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
 
-from strategy.abs_strategy import AbsStrategy
-from strategy.deduction import DigitDeduction
+from sudoku_lib.strategy.abs_strategy import AbsStrategy
+from sudoku_lib.strategy.deduction import DigitDeduction
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
 
-    from grid import Cell, GridAnalysis
+    from sudoku_lib.grid import Cell, GridAnalysis
 
     UnitGetter = Callable[[int], Iterable[Cell]]
 

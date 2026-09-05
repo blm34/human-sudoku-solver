@@ -2,11 +2,11 @@ from unittest.mock import Mock
 
 import pytest
 
-from grid.cell import Cell
-from grid.modifier import GridModifier
-from grid.state import GridState
-from grid.utils import ALL_DIGITS, digit_mask
-from strategy.deduction import DigitDeduction, EliminationDeduction
+from sudoku_lib.grid.cell import Cell
+from sudoku_lib.grid.modifier import GridModifier
+from sudoku_lib.grid.state import GridState
+from sudoku_lib.grid.utils import ALL_DIGITS, digit_mask
+from sudoku_lib.strategy.deduction import DigitDeduction, EliminationDeduction
 
 
 class TestGridModifier:
