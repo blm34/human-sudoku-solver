@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from grid.cell import Cell
 from grid.modifier import GridModifier
 from grid.state import GridState
-from grid.utils import digit_mask
+from grid.utils import ALL_DIGITS, digit_mask
 from strategy.deduction import DigitDeduction, EliminationDeduction
 
 
@@ -31,6 +31,7 @@ class TestGridModifier:
         iterator.peers.return_value = (peer,)
 
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
         modifier = GridModifier(grid, iterator)
 
         # ACT
@@ -104,6 +105,7 @@ class TestGridModifier:
     def test_write_value_doesnt_remove_candidate_from_unrelated_cell(self):
         # ARRANGE
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
         modifier = GridModifier(grid)
 
         target = Cell(0, 0)
@@ -166,6 +168,7 @@ class TestGridModifier:
         deduction = EliminationDeduction("", "", [(cell, 5)])
 
         grid = GridState.create_empty()
+        grid._candidates[cell.index] = ALL_DIGITS
         modifier = GridModifier(grid)
 
         # ACT
@@ -187,6 +190,7 @@ class TestGridModifier:
         deduction = EliminationDeduction("", "", eliminations)
 
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
         modifier = GridModifier(grid)
 
         # ACT

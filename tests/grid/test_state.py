@@ -12,13 +12,13 @@ class TestGridState:
         assert len(grid._values) == 81
         assert all(value == 0 for value in grid._values)
 
-    def test_create_empty_initialises_empty_grid_of_candidates(self):
+    def test_create_empty_initialises_empty_grid(self):
         # ARRANGE
         grid = GridState.create_empty()
 
         # ASSERT
         assert len(grid._candidates) == 81
-        assert all(candidates == ALL_DIGITS for candidates in grid._candidates)
+        assert all(candidates == 0 for candidates in grid._candidates)
 
     def test_value_returns_value_in_given_cell(self):
         # ARRANGE
@@ -80,6 +80,7 @@ class TestGridState:
     def test_eliminate_candidates_removes_new_candidates(self):
         # ARRANGE
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
 
         idx = 17
         cell = Cell.from_index(idx)
@@ -153,6 +154,7 @@ class TestGridState:
     def test_copy_returns_same_values_and_candidates(self):
         # ARRANGE
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
 
         grid.write_value(Cell(0, 0), 5)
         grid.eliminate_candidates(Cell(1, 1), 0b000001000)
@@ -183,6 +185,7 @@ class TestGridState:
     def test_copy_has_independent_candidates(self):
         # ARRANGE
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
         cell = Cell(0, 0)
 
         # ACT
@@ -196,6 +199,7 @@ class TestGridState:
     def test_changes_to_original_do_not_affect_copy(self):
         # ARRANGE
         grid = GridState.create_empty()
+        grid._candidates = [ALL_DIGITS] * 81
         copy = grid.copy()
 
         # ACT

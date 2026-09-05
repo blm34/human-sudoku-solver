@@ -1,7 +1,5 @@
 from typing import TYPE_CHECKING
 
-from .utils import ALL_DIGITS
-
 if TYPE_CHECKING:
     from typing import Self
 
@@ -19,7 +17,7 @@ class GridState:
     def create_empty(cls) -> Self:
         return cls(
             values=[0] * 81,
-            candidates=[ALL_DIGITS] * 81,
+            candidates=[0] * 81,
         )
 
     def value(self, cell: Cell) -> int:
