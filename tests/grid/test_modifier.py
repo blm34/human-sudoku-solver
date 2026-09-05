@@ -1,5 +1,7 @@
 from unittest.mock import Mock
 
+import pytest
+
 from grid.cell import Cell
 from grid.modifier import GridModifier
 from grid.state import GridState
@@ -119,6 +121,29 @@ class TestGridModifier:
         mask = digit_mask(digit)
         assert grid.candidates(unrelated) & mask
 
+    @pytest.mark.parametrize(
+        "values, expected_mask",
+        (
+            ((1, 2, 3), 0b000000111),
+            ((4, 5, 6), 0b000111000),
+            ((7, 8, 9), 0b111000000),
+            ((1,), 0b000000001),
+            ((1, 3, 5, 7, 9), 0b101010101),
+            ((1, 2, 3, 4, 5, 6, 7, 8, 9), 0b111111111),
+            ((), 0b000000000),
+        ),
+    )
+    def test_get_candidate_mask(self, values, expected_mask):
+        # ARRANGE
+        grid = Mock()
+        modifier = GridModifier(grid)
+
+        # ACT
+        mask = modifier._get_candidate_mask(values)
+
+        # ASSERT
+        assert mask == expected_mask
+
     def test_remove_candidate_removes_a_candidate(self):
         # ARRANGE
         cell = Cell(6, 5)
@@ -133,6 +158,20 @@ class TestGridModifier:
         # ASSERT
         assert grid.candidates(cell) == 0b110010001
 
+    def test_remove_candidates_removes_multiple_candidates(self):
+        # ARRANGE
+        cell = Cell(4, 4)
+
+        grid = GridState.create_empty()
+        grid._candidates[cell.index] = ALL_DIGITS
+        modifier = GridModifier(grid)
+
+        # ACT
+        modifier.remove_candidates((5, 6, 7), cell)
+
+        # ASSERT
+        assert grid._candidates[cell.index] == 0b110001111
+
     def test_add_candidate_adds_a_candidate(self):
         # ARRANGE
         cell = Cell(6, 5)
@@ -146,6 +185,19 @@ class TestGridModifier:
 
         # ASSERT
         assert grid.candidates(cell) == 0b111011001
+
+    def test_add_candidates_adds_multiple_candidates(self):
+        # ARRANGE
+        cell = Cell(4, 4)
+
+        grid = GridState.create_empty()
+        modifier = GridModifier(grid)
+
+        # ACT
+        modifier.add_candidates((5, 6, 7), cell)
+
+        # ASSERT
+        assert grid._candidates[cell.index] == 0b001110000
 
     def test_apply_with_a_digit_deduction_adds_the_value(self):
         # ARRANGE

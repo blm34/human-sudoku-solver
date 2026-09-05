@@ -27,7 +27,7 @@ def test_reads_complete_grid():
     grid = reader.read(stream)
 
     # ASSERT
-    assert all(grid._values[idx] == int(char) for idx, char in enumerate(text))
+    assert all(grid._puzzle_values[idx] == int(char) for idx, char in enumerate(text))
 
 
 def test_reads_values_into_correct_cells():
@@ -41,8 +41,8 @@ def test_reads_values_into_correct_cells():
     grid = reader.read(stream)
 
     # ASSERT
-    assert grid._values[0] == 1
-    assert all(value == 0 for value in grid._values[1:])
+    assert grid._puzzle_values[0] == 1
+    assert all(value == 0 for value in grid._puzzle_values[1:])
 
 
 def test_leaves_empty_cells_unset():
@@ -56,7 +56,7 @@ def test_leaves_empty_cells_unset():
     grid = reader.read(stream)
 
     # ASSERT
-    assert all(val == 0 for val in grid._values)
+    assert all(val == 0 for val in grid._puzzle_values)
 
 
 @pytest.mark.parametrize("empty", ["0", ".", "X", "*", "_"])
@@ -71,8 +71,8 @@ def test_supports_preferred_empty_characters(empty):
     grid = reader.read(stream)
 
     # ASSERT
-    assert grid._values[0] == 5
-    assert all(value == 0 for value in grid._values[1:])
+    assert grid._puzzle_values[0] == 5
+    assert all(value == 0 for value in grid._puzzle_values[1:])
 
 
 def test_raises_error_when_input_is_too_short():
@@ -129,8 +129,8 @@ def test_can_determine_a_non_standard_empty_character():
     grid = reader.read(stream)
 
     # ASSERT
-    assert grid._values[0] == 1
-    assert all(value == 0 for value in grid._values[1:])
+    assert grid._puzzle_values[0] == 1
+    assert all(value == 0 for value in grid._puzzle_values[1:])
 
 
 def test_values_are_written_to_correct_cells():
@@ -154,9 +154,9 @@ def test_values_are_written_to_correct_cells():
     grid = reader.read(stream)
 
     # ASSERT
-    assert grid._values[Cell(0, 0).index] == 1
-    assert grid._values[Cell(4, 4).index] == 5
-    assert grid._values[Cell(8, 8).index] == 9
+    assert grid._puzzle_values[Cell(0, 0).index] == 1
+    assert grid._puzzle_values[Cell(4, 4).index] == 5
+    assert grid._puzzle_values[Cell(8, 8).index] == 9
 
 
 @pytest.mark.parametrize(
