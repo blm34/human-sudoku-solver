@@ -80,3 +80,13 @@ class GridModifier:
     def _apply_elimination_deduction(self, deduction: EliminationDeduction):
         for cell, digit in deduction.eliminations:
             self.remove_candidate(digit, cell)
+
+    def compute_candidates(self):
+        """Compute all candidates based off the current values in the grid."""
+        for cell in self._cell_iterators.cells():
+            self._state.add_candidates(cell, ALL_DIGITS)
+
+        for cell in self._cell_iterators.cells():
+            value = self._state.value(cell)
+            if value != 0:
+                self.write_value(value, cell)

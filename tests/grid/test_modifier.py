@@ -199,3 +199,56 @@ class TestGridModifier:
         # ASSERT
         assert grid.candidates(cell_1) == 0b111111000
         assert grid.candidates(cell_2) == 0b101111111
+
+    def test_compute_candidates_on_an_empty_grid_gives_all_candidates(self):
+        # ARRANGE
+        grid = GridState.create_empty()
+        modifier = GridModifier(grid)
+
+        # ACT
+        modifier.compute_candidates()
+
+        # ASSERT
+        assert all(candidates == ALL_DIGITS for candidates in grid._candidates)
+
+    def test_compute_candidates_sets_candidates_to_none_in_cells_with_values(self):
+        # ARRANGE
+        cell = Cell(5, 5)
+        grid = GridState.create_empty()
+        grid.write_value(cell, 4)
+        modifier = GridModifier(grid)
+
+        # ACT
+        modifier.compute_candidates()
+
+        # ASSERT
+        assert grid.candidates(cell) == 0
+
+    def test_compute_candidates_removes_candidate_from_peers(self):
+        # ARRANGE
+        cell = Cell(4, 4)
+        grid = GridState.create_empty()
+        grid.write_value(cell, 4)
+        modifier = GridModifier(grid)
+
+        peers = [Cell(0, 4), Cell(4, 0), Cell(5, 5)]
+
+        # ACT
+        modifier.compute_candidates()
+
+        # ASSERT
+        assert all(grid.candidates(cell) == 0b111110111 for cell in peers)
+
+    def test_compute_candidates_removes_multiple_candidates_from_cell(self):
+        # ARRANGE
+        cell = Cell(5, 5)
+        grid = GridState.create_empty()
+        grid.write_value(Cell(0, 5), 1)
+        grid.write_value(Cell(5, 0), 2)
+        modifier = GridModifier(grid)
+
+        # ACT
+        modifier.compute_candidates()
+
+        # ASSERT
+        assert grid.candidates(cell) == 0b111111100
