@@ -66,7 +66,7 @@ class CellIterators:
         """Iterate over all cells in the grid.
 
         Returns:
-            A generator yielding cells
+            A tuple of all cells in the grid
         """
         return tuple(Cell.from_index(idx) for idx in range(81))
 
@@ -74,9 +74,17 @@ class CellIterators:
         """Iterate over all the empty cells in the grid.
 
         Returns:
-            A generator yielding empty cells
+            A tuple of empty cells
         """
         return tuple(cell for cell in self.cells() if self._grid.cell_empty(cell))
+
+    def filled_cells(self) -> tuple[Cell, ...]:
+        """Iterate over all non-empty cells in the grid.
+
+        Returns:
+            A tuple of filled cells
+        """
+        return tuple(cell for cell in self.cells() if not self._grid.cell_empty(cell))
 
     def units(self) -> tuple[tuple[Cell, ...], ...]:
         return tuple(
@@ -92,7 +100,7 @@ class CellIterators:
             row_num: The row to iterate over
 
         Returns:
-            A generator yielding cells from the given row
+            A tuple of cells from the given row
         """
         return tuple(Cell(row_num, col) for col in range(9))
 
@@ -103,7 +111,7 @@ class CellIterators:
             col_num: The column to iterate over
 
         Returns:
-            A generator yielding cells from the given column
+            A tuple of cells from the given column
         """
         return tuple(Cell(row, col_num) for row in range(9))
 
@@ -114,7 +122,7 @@ class CellIterators:
             box_num: The index of the box to iterate over
 
         Returns:
-            A generator yielding cells from the given box
+            A tuple of cells from the given box
         """
         box_row, box_col = divmod(box_num, 3)
         return tuple(
@@ -130,7 +138,7 @@ class CellIterators:
             cell: The cell to find peers of
 
         Returns:
-            A generator yielding cells that are peers of the given cell
+            A tuple of cells that are peers of the given cell
         """
         peers = (
             set(self.row(cell.row)) | set(self.col(cell.col)) | set(self.box(cell.box))
