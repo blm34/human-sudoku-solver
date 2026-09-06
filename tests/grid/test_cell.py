@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from sudoku_lib.grid.cell import Cell, CellIterators
+from sudoku_strategy.grid.cell import Cell, CellIterators
 
 
 class TestCell:

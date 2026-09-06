@@ -1,7 +1,7 @@
 from io import StringIO
 from unittest.mock import Mock
 
-from sudoku_lib.persistance.writers.susser import SusserWriter
+from sudoku_strategy.persistance.writers.susser import SusserWriter
 
 
 def test_writes_values_to_stream():

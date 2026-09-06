@@ -1,6 +1,6 @@
 import pytest
 
-from sudoku_lib.grid.utils import digit_mask
+from sudoku_strategy.grid.utils import digit_mask
 
 
 @pytest.mark.parametrize(

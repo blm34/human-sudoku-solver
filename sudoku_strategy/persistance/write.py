@@ -5,7 +5,7 @@ from .writers import JsonWriter, SusserWriter
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from sudoku_lib.grid import GridState
+    from sudoku_strategy.grid import GridState
 
     from .writers.interface import AbsSudokuWriter
 

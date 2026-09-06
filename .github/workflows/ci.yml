@@ -72,4 +72,4 @@ jobs:
         run: uv sync --python 3.14 --group dev
 
       - name: Run ty
-        run: uv run ty check sudoku_lib
+        run: uv run ty check sudoku_strategy

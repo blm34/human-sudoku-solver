@@ -25,14 +25,14 @@ Example of the json format:
 import json
 from typing import TYPE_CHECKING
 
-from sudoku_lib.grid import GridAnalysis
+from sudoku_strategy.grid import GridAnalysis
 
 from .interface import AbsSudokuWriter
 
 if TYPE_CHECKING:
     from typing import TextIO
 
-    from sudoku_lib.grid import GridState
+    from sudoku_strategy.grid import GridState
 
 
 class JsonWriter(AbsSudokuWriter):

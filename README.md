@@ -20,13 +20,13 @@ explainable solving steps that can be presented as hints.
 Install from PyPI with:
 
 ```bash
-pip install sudoku_lib
+pip install sudoku_strategy
 ```
 
 ## Quick Start
 
 ```Python
-from sudoku_lib import GridState, Solver
+from sudoku_strategy import GridState, Solver
 from humand_sudoku_solver.grid import GridModifier
 
 # Puzzle values is an 81 length tuple representing the starting state of the
@@ -71,7 +71,7 @@ A Sudoku consists of 81 cells arranged into:
 Cells are represented using zero-based row and column coordinates:
 
 ```Python
-from sudoku_lib import Cell
+from sudoku_strategy import Cell
 
 cell = Cell(row=3, col=6)
 ```
@@ -98,7 +98,7 @@ cell = Cell.from_index(33)
 An empty grid can be created with:
 
 ```Python
-from sudoku_lib import GridState
+from sudoku_strategy import GridState
 
 grid = GridState.create_empty()
 ```
@@ -121,7 +121,7 @@ Editing a Sudoku grid is achieved with `GridModifier` It allows values and
 candidates to be added or removed from a grid:
 
 ```Python
-from sudoku_lib.grid import GridModifier
+from sudoku_strategy.grid import GridModifier
 
 modifier = GridModifier(grid)
 
@@ -142,7 +142,7 @@ deliberately separate from the state itself. Analysis does not modify the
 puzzle. For example:
 
 ```Python
-from sudoku_lib.grid import GridAnalysis
+from sudoku_strategy.grid import GridAnalysis
 
 analysis = GridAnalysis(grid)
 
@@ -174,7 +174,7 @@ For example, the naked single strategy looks for an empty cell with exactly one
 remaining candidate:
 
 ```Python
-from sudoku_lib.strategy import NakedSingleStrategy
+from sudoku_strategy.strategy import NakedSingleStrategy
 
 strategy = NakedSingleStrategy()
 
@@ -192,7 +192,7 @@ grid, or an `EliminationDeduction` which shows a candidate that can be
 eliminated. For example:
 
 ```Python
-from sudoku_lib.strategy import DigitDeduction, EliminationDeduction
+from sudoku_strategy.strategy import DigitDeduction, EliminationDeduction
 
 DigitDeduction(
     strategy="Naked Single",
@@ -211,7 +211,7 @@ The `Solver` can search its configured strategies for the next available
 deduction
 
 ```Python
-from sudoku_lib import Solver
+from sudoku_strategy import Solver
 
 solver = Solver()
 
@@ -266,7 +266,7 @@ Puzzles can be read and written in various formats using `GridFileWriter` and
 `GridFileReader` which convert file to/from a `GridState`:
 
 ```Python
-from sudoku_lib import GridFileWriter, GridFileReader
+from sudoku_strategy import GridFileWriter, GridFileReader
 
 # Load a file into a GridState
 grid = GridFileReader().load(path)
