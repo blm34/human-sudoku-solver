@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from sudoku_lib.persistance.read import SudokuFileReader
+from sudoku_strategy.persistance.read import SudokuFileReader
 
 
 def test_loads_grid_using_reader_for_file_type(tmp_path):
@@ -17,7 +17,7 @@ def test_loads_grid_using_reader_for_file_type(tmp_path):
 
     reader_map = {".ext": Mock(return_value=reader)}
 
-    with patch("sudoku_lib.persistance.read.READERS", reader_map):
+    with patch("sudoku_strategy.persistance.read.READERS", reader_map):
         file_reader = SudokuFileReader()
 
         # ACT
@@ -59,7 +59,7 @@ def test_reader_receives_file_stream(tmp_path):
     reader_map = {".ext": Mock(return_value=reader)}
 
     with patch(
-        "sudoku_lib.persistance.read.READERS",
+        "sudoku_strategy.persistance.read.READERS",
         reader_map,
     ):
         file_reader = SudokuFileReader()

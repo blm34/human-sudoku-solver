@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
-from sudoku_lib.strategy.abs_strategy import AbsStrategy
-from sudoku_lib.strategy.deduction import DigitDeduction
+from sudoku_strategy.strategy.abs_strategy import AbsStrategy
+from sudoku_strategy.strategy.deduction import DigitDeduction
 
 if TYPE_CHECKING:
-    from sudoku_lib.grid import Cell, GridAnalysis
+    from sudoku_strategy.grid import Cell, GridAnalysis
 
 
 class HiddenSingleStrategy(AbsStrategy):

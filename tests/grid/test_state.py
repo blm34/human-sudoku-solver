@@ -1,8 +1,8 @@
 import pytest
 
-from sudoku_lib.grid.cell import Cell
-from sudoku_lib.grid.state import GridState
-from sudoku_lib.grid.utils import ALL_DIGITS, digit_mask
+from sudoku_strategy.grid.cell import Cell
+from sudoku_strategy.grid.state import GridState
+from sudoku_strategy.grid.utils import ALL_DIGITS, digit_mask
 
 
 class TestGridState:

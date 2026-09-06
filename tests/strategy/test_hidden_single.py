@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from sudoku_lib.strategy.hidden_single import HiddenSingleStrategy
+from sudoku_strategy.strategy.hidden_single import HiddenSingleStrategy
 
 
 def test_finds_hidden_single():

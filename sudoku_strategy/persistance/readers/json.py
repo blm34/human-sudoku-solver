@@ -25,7 +25,7 @@ Example of the json format:
 import json
 from typing import TYPE_CHECKING
 
-from sudoku_lib.grid import Cell, GridModifier, GridState
+from sudoku_strategy.grid import Cell, GridModifier, GridState
 
 from .interface import AbsSudokuReader
 
