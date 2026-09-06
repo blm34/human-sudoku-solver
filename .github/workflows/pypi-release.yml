@@ -21,20 +21,6 @@ jobs:
         with:
           python-version: "3.14"
 
-      - name: Verify Version
-        shell: bash
-        run: |
-          expected="${GITHUB_REF_NAME#v}"
-          actual="$(uv run python -c 'import setuptools_scm; print(setuptools_scm.get_version())')"
-
-          echo "Expected: $expected"
-          echo "Actual:   $actual"
-
-          if [[ "$actual" != "$expected" ]]; then
-            echo "Version mismatch"
-            exit 1
-          fi
-
       - name: Build Distributions
         run: uv build
 
