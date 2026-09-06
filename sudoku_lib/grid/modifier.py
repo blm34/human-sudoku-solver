@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from strategy.deduction import DigitDeduction, EliminationDeduction
+from sudoku_lib.strategy.deduction import DigitDeduction, EliminationDeduction
 
 from .cell import CellIterators
 from .utils import ALL_DIGITS, digit_mask
@@ -8,7 +8,7 @@ from .utils import ALL_DIGITS, digit_mask
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from strategy.deduction import AbsDeduction
+    from sudoku_lib.strategy.deduction import AbsDeduction
 
     from .cell import Cell
     from .state import GridState

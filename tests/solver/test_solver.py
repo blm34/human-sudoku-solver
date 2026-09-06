@@ -1,6 +1,6 @@
 from unittest.mock import Mock, call, patch
 
-from solver.solver import Solver
+from sudoku_lib.solver.solver import Solver
 
 
 class TestSolver:
@@ -16,7 +16,7 @@ class TestSolver:
 
         first_strategy.find.return_value = deduction
 
-        with patch("solver.solver.GridAnalysis", return_value=analysis):
+        with patch("sudoku_lib.solver.solver.GridAnalysis", return_value=analysis):
             solver = Solver(strategies=(first_strategy, second_strategy))
 
             # ACT
@@ -40,7 +40,7 @@ class TestSolver:
         first_strategy.find.return_value = None
         second_strategy.find.return_value = deduction
 
-        with patch("solver.solver.GridAnalysis", return_value=analysis):
+        with patch("sudoku_lib.solver.solver.GridAnalysis", return_value=analysis):
             solver = Solver(strategies=(first_strategy, second_strategy))
 
             # ACT
@@ -63,7 +63,7 @@ class TestSolver:
         first_strategy.find.return_value = None
         second_strategy.find.return_value = None
 
-        with patch("solver.solver.GridAnalysis", return_value=analysis):
+        with patch("sudoku_lib.solver.solver.GridAnalysis", return_value=analysis):
             solver = Solver(strategies=(first_strategy, second_strategy))
 
             # ACT
@@ -84,7 +84,7 @@ class TestSolver:
         strategy.find.return_value = Mock()
 
         with patch(
-            "solver.solver.GridAnalysis",
+            "sudoku_lib.solver.solver.GridAnalysis",
             return_value=analysis,
         ) as analysis_class:
             solver = Solver(strategies=(strategy,))
@@ -103,7 +103,7 @@ class TestSolver:
         grid.copy.return_value = working_grid
         working_grid.is_complete.side_effect = [True]
 
-        with patch("solver.solver.GridModifier") as modifier_class:
+        with patch("sudoku_lib.solver.solver.GridModifier") as modifier_class:
             solver = Solver()
 
             # ACT
@@ -131,7 +131,7 @@ class TestSolver:
                 "find_next",
                 side_effect=[deduction],
             ),
-            patch("solver.solver.GridModifier") as modifier_class,
+            patch("sudoku_lib.solver.solver.GridModifier") as modifier_class,
         ):
             modifier = modifier_class.return_value
 
@@ -165,7 +165,7 @@ class TestSolver:
                 "find_next",
                 side_effect=[first_deduction, second_deduction],
             ),
-            patch("solver.solver.GridModifier") as modifier_class,
+            patch("sudoku_lib.solver.solver.GridModifier") as modifier_class,
         ):
             modifier = modifier_class.return_value
 
@@ -199,7 +199,7 @@ class TestSolver:
                 "find_next",
                 return_value=None,
             ),
-            patch("solver.solver.GridModifier"),
+            patch("sudoku_lib.solver.solver.GridModifier"),
         ):
             solver = Solver()
 
@@ -223,7 +223,7 @@ class TestSolver:
                 "find_next",
                 return_value=None,
             ),
-            patch("solver.solver.GridModifier"),
+            patch("sudoku_lib.solver.solver.GridModifier"),
         ):
             solver = Solver()
 

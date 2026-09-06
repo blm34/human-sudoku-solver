@@ -1,15 +1,15 @@
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from grid import GridAnalysis, GridModifier
-from strategy import HiddenSingleStrategy, NakedSingleStrategy
+from sudoku_lib.grid import GridAnalysis, GridModifier
+from sudoku_lib.strategy import HiddenSingleStrategy, NakedSingleStrategy
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from grid.state import GridState
-    from strategy.abs_strategy import AbsStrategy
-    from strategy.deduction import AbsDeduction
+    from sudoku_lib.grid import GridState
+    from sudoku_lib.strategy.abs_strategy import AbsStrategy
+    from sudoku_lib.strategy.deduction import AbsDeduction
 
 
 _logger = getLogger(__name__)

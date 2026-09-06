@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from grid import Cell
+    from sudoku_lib.grid import Cell
 
 
 @dataclass(frozen=True)

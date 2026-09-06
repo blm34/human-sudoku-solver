@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from strategy.naked_single import NakedSingleStrategy
+from sudoku_lib.strategy.naked_single import NakedSingleStrategy
 
 
 def test_finds_naked_single():

@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from grid import GridAnalysis
-    from strategy.deduction import AbsDeduction
+    from sudoku_lib.grid import GridAnalysis
+    from sudoku_lib.strategy.deduction import AbsDeduction
 
 
 class AbsStrategy(ABC):

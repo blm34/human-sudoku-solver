@@ -1,8 +1,8 @@
 import json
 from io import StringIO
 
-from grid import Cell
-from persistance.readers.json import JsonReader
+from sudoku_lib.grid import Cell
+from sudoku_lib.persistance.readers.json import JsonReader
 
 
 def test_reads_puzzle_values():

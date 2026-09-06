@@ -2,8 +2,8 @@ from io import StringIO
 
 import pytest
 
-from grid import Cell
-from persistance.readers.susser import SusserReader
+from sudoku_lib.grid import Cell
+from sudoku_lib.persistance.readers.susser import SusserReader
 
 
 def test_reads_complete_grid():

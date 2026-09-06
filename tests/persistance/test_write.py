@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from persistance.write import SudokuFileWriter
+from sudoku_lib.persistance.write import SudokuFileWriter
 
 
 def test_saves_grid_using_writer_for_file_type(tmp_path):
@@ -15,7 +15,7 @@ def test_saves_grid_using_writer_for_file_type(tmp_path):
     writers = {".ext": Mock(return_value=writer)}
 
     with patch(
-        "persistance.write.WRITERS",
+        "sudoku_lib.persistance.write.WRITERS",
         writers,
     ):
         file_writer = SudokuFileWriter()
@@ -44,7 +44,7 @@ def test_writer_receives_grid_and_file_stream(tmp_path):
     writers = {".ext": Mock(return_value=writer)}
 
     with patch(
-        "persistance.write.WRITERS",
+        "sudoku_lib.persistance.write.WRITERS",
         writers,
     ):
         file_writer = SudokuFileWriter()

@@ -1,8 +1,8 @@
 import json
 from io import StringIO
 
-from grid import Cell, GridModifier, GridState
-from persistance.writers.json import JsonWriter
+from sudoku_lib.grid import Cell, GridModifier, GridState
+from sudoku_lib.persistance.writers.json import JsonWriter
 
 
 def test_writes_puzzle_values():

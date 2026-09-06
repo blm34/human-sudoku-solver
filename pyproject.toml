@@ -3,13 +3,16 @@ requires = ["setuptools>=80", "setuptools-scm[simple]>=9.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "human-sudoku-solver"
+name = "sudoku-lib"
 dynamic = ["version"]
 requires-python = ">=3.14"
-description = "Use human logic to help solve sudoku"
+description = "Library for solving sudoku in Python"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 license-files = ["LICENCE"]
+authors = [
+    { name = "blm34", email = "pypi.escalate394@passmail.net"},
+]
 keywords = ["sudoku"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -18,11 +21,9 @@ classifiers = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/blm34/human-sudoku-solver/"
 Repository = "https://github.com/blm34/human-sudoku-solver/"
 Issues = "https://github.com/blm34/human-sudoku-solver/issues"
-
-[tool.setuptools.packages.find]
-where = ["src"]
 
 [dependency-groups]
 dev = [

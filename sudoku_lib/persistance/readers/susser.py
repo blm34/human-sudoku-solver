@@ -9,7 +9,7 @@ up to 81, the following preference list is used: '0', '.', 'X', '*', '_', ' '
 
 from typing import TYPE_CHECKING
 
-from grid import GridState
+from sudoku_lib.grid import GridState
 
 from .interface import AbsSudokuReader
 
