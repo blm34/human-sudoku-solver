@@ -69,3 +69,16 @@ class GridAnalysis:
         """
         candidates = self._grid.candidates(cell)
         return candidates.bit_count()
+
+    def get_value_in_cell(self, cell: Cell) -> int:
+        """Get the value in a cell.
+
+        If the cell has no value, return 0.
+
+        Args:
+            cell: The cell to get the value for
+
+        Returns:
+            The value in the cell, or 0 if empty
+        """
+        return self._grid.value(cell)
