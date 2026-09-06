@@ -301,3 +301,23 @@ class TestCellIterators:
         # ASSERT
         assert len(cells) == 80
         assert filled_cell not in cells
+
+    def test_filled_cells_returns_filled_cells(self):
+        # ARRANGE
+        grid = Mock()
+        filled_cells = [
+            Cell(0, 6),
+            Cell(2, 1),
+            Cell(5, 5),
+            Cell(7, 6),
+            Cell(8, 4),
+        ]
+        grid.cell_empty = lambda cell: cell not in filled_cells
+        iterator = CellIterators(grid)
+
+        # ACT
+        cells = iterator.filled_cells()
+
+        # ASSERT
+        assert len(cells) == len(filled_cells)
+        assert all(cell in filled_cells for cell in cells)

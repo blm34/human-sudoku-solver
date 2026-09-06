@@ -78,6 +78,14 @@ class CellIterators:
         """
         return tuple(cell for cell in self.cells() if self._grid.cell_empty(cell))
 
+    def filled_cells(self) -> tuple[Cell, ...]:
+        """Iterate over all non-empty cells in the grid.
+
+        Returns:
+            A tuple of filled cells
+        """
+        return tuple(cell for cell in self.cells() if not self._grid.cell_empty(cell))
+
     def units(self) -> tuple[tuple[Cell, ...], ...]:
         return tuple(
             unit
