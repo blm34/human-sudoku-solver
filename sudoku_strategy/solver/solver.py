@@ -2,7 +2,11 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from sudoku_strategy.grid import GridAnalysis, GridModifier
-from sudoku_strategy.strategy import HiddenSingleStrategy, NakedSingleStrategy
+from sudoku_strategy.strategy import (
+    EliminateCandidatesStrategy,
+    HiddenSingleStrategy,
+    NakedSingleStrategy,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -16,6 +20,7 @@ _logger = getLogger(__name__)
 
 
 STRATEGIES = (
+    EliminateCandidatesStrategy(),
     NakedSingleStrategy(),
     HiddenSingleStrategy(),
 )
