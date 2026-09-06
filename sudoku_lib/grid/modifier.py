@@ -132,7 +132,6 @@ class GridModifier:
         for cell in self._cell_iterators.cells():
             self._state.add_candidates(cell, ALL_DIGITS)
 
-        for cell in self._cell_iterators.cells():
+        for cell in self._cell_iterators.filled_cells():
             value = self._state.value(cell)
-            if value != 0:
-                self.update_candidates(value, cell)
+            self.update_candidates(value, cell)
