@@ -1,5 +1,5 @@
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -7,23 +7,18 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class AbsDeduction(ABC):
+class CellDigit:
+    """Represents a value or candidate that can be changed in a cell."""
+
+    cell: Cell
+    digit: int
+
+
+@dataclass(frozen=True)
+class Deduction(ABC):
     """Abstract class for the result of a strategy."""
 
     strategy: str
     explanation: str
-
-
-@dataclass(frozen=True)
-class EliminationDeduction(AbsDeduction):
-    """Result of a strategy that allows candidates to be eliminated."""
-
-    eliminations: list[tuple[Cell, int]]
-
-
-@dataclass(frozen=True)
-class DigitDeduction(AbsDeduction):
-    """Result of a strategy that allows a cell to be filled in."""
-
-    cell: Cell
-    digit: int
+    eliminations: list[CellDigit] = field(default_factory=list)
+    assignment: CellDigit | None = None
