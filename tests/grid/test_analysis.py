@@ -169,3 +169,17 @@ class TestGridAnalysis:
 
         # ASSERT
         assert count == 6
+
+    def test_get_value_in_cell_checks_the_grid_state(self):
+        # ARRANGE
+        state = GridState.create_empty()
+        state.value = Mock()
+        analysis = GridAnalysis(state)
+
+        cell = Mock()
+
+        # ACT
+        _ = analysis.get_value_in_cell(cell)
+
+        # ASSERT
+        state.value.assert_called_once_with(cell)
