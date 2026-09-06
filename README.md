@@ -27,7 +27,7 @@ pip install sudoku_strategy
 
 ```Python
 from sudoku_strategy import GridState, Solver
-from humand_sudoku_solver.grid import GridModifier
+from sudoku_strategy.grid import GridModifier
 
 # Puzzle values is an 81 length tuple representing the starting state of the
 # puzzle. `0` is used to represent an empty cell.
