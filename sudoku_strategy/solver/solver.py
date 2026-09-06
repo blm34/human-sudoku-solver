@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
     from sudoku_strategy.grid import GridState
     from sudoku_strategy.strategy.abs_strategy import AbsStrategy
-    from sudoku_strategy.strategy.deduction import AbsDeduction
+    from sudoku_strategy.strategy.deduction import Deduction
 
 
 _logger = getLogger(__name__)
@@ -32,7 +32,7 @@ class Solver:
     def __init__(self, strategies: Sequence[AbsStrategy] = STRATEGIES):
         self._strategies = strategies
 
-    def find_next(self, grid: GridState) -> AbsDeduction | None:
+    def find_next(self, grid: GridState) -> Deduction | None:
         """Find the next move for the given grid.
 
         Args:
@@ -51,7 +51,7 @@ class Solver:
 
         return None
 
-    def solve(self, grid: GridState) -> list[AbsDeduction]:
+    def solve(self, grid: GridState) -> list[Deduction]:
         """Find all the moves to solve the sudoku.
 
         Args:

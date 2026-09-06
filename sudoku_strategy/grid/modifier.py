@@ -1,14 +1,12 @@
 from typing import TYPE_CHECKING
 
-from sudoku_strategy.strategy.deduction import DigitDeduction, EliminationDeduction
-
 from .cell import CellIterators
 from .utils import ALL_DIGITS, digit_mask
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from sudoku_strategy.strategy.deduction import AbsDeduction
+    from sudoku_strategy.strategy.deduction import Deduction
 
     from .cell import Cell
     from .state import GridState
@@ -108,24 +106,17 @@ class GridModifier:
         mask = self._get_candidate_mask(values)
         self._state.add_candidates(cell, mask)
 
-    def apply(self, deduction: AbsDeduction):
+    def apply(self, deduction: Deduction):
         """Apply a deduction to a grid.
 
         Args:
             deduction: The deduction to apply
         """
-        if isinstance(deduction, DigitDeduction):
-            self._apply_digit_deduction(deduction)
+        if deduction.assignment is not None:
+            self.add_value(deduction.assignment.digit, deduction.assignment.cell)
 
-        elif isinstance(deduction, EliminationDeduction):
-            self._apply_elimination_deduction(deduction)
-
-    def _apply_digit_deduction(self, deduction: DigitDeduction):
-        self.add_value(deduction.digit, deduction.cell)
-
-    def _apply_elimination_deduction(self, deduction: EliminationDeduction):
-        for cell, digit in deduction.eliminations:
-            self.remove_candidate(digit, cell)
+        for elimination in deduction.eliminations:
+            self.remove_candidate(elimination.digit, elimination.cell)
 
     def compute_candidates(self):
         """Compute all candidates based off the current values in the grid."""
