@@ -9,7 +9,7 @@ requires-python = ">=3.14"
 description = "Library for solving sudoku in Python"
 readme = "README.md"
 license = "GPL-3.0-or-later"
-license-files = ["LICENCE"]
+license-files = ["LICENSE"]
 authors = [
     { name = "blm34", email = "pypi.escalate394@passmail.net"},
 ]
