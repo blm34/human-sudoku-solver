@@ -3,7 +3,7 @@ requires = ["setuptools>=80", "setuptools-scm[simple]>=9.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sudoku-lib"
+name = "sudoku-strategy"
 dynamic = ["version"]
 requires-python = ">=3.14"
 description = "Library for solving sudoku in Python"
