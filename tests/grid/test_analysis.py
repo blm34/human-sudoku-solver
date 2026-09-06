@@ -183,3 +183,55 @@ class TestGridAnalysis:
 
         # ASSERT
         state.value.assert_called_once_with(cell)
+
+    @pytest.mark.parametrize(
+        "mask, digit",
+        (
+            (0b111111111, 5),
+            (0b000001000, 4),
+            (0b010101010, 8),
+            (0b110011001, 1),
+        ),
+    )
+    def test_cell_has_candidate_true_case(self, mask, digit):
+        # ARRANGE
+        state = GridState.create_empty()
+        state.candidates = Mock()
+        state.candidates.return_value = mask
+
+        analysis = GridAnalysis(state)
+
+        cell = Cell(0, 0)
+
+        # ACT
+        has_digit = analysis.cell_has_candidate(cell, digit)
+
+        # ASSERT
+        assert has_digit
+        state.candidates.assert_called_once_with(cell)
+
+    @pytest.mark.parametrize(
+        "mask, digit",
+        (
+            (0b000000000, 5),
+            (0b111000011, 4),
+            (0b010101010, 9),
+            (0b110011001, 7),
+        ),
+    )
+    def test_cell_has_candidate_false_case(self, mask, digit):
+        # ARRANGE
+        state = GridState.create_empty()
+        state.candidates = Mock()
+        state.candidates.return_value = mask
+
+        analysis = GridAnalysis(state)
+
+        cell = Cell(0, 0)
+
+        # ACT
+        has_digit = analysis.cell_has_candidate(cell, digit)
+
+        # ASSERT
+        assert not has_digit
+        state.candidates.assert_called_once_with(cell)

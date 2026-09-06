@@ -82,3 +82,17 @@ class GridAnalysis:
             The value in the cell, or 0 if empty
         """
         return self._grid.value(cell)
+
+    def cell_has_candidate(self, cell: Cell, digit: int) -> bool:
+        """Return True if the given cell has the given candidate.
+
+        Args:
+            cell: The cell to check for the candidate
+            digit: The candidate to check the cell for
+
+        Returns:
+            True if the given cell has the given candidate
+        """
+        candidates = self._grid.candidates(cell)
+        mask = digit_mask(digit)
+        return bool(candidates & mask)
