@@ -1,0 +1,71 @@
+name: PyPI Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build Distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.14"
+
+      - name: Verify Version
+        shell: bash
+        run: |
+          expected="${GITHUB_REF_NAME#v}"
+          actual="$(uv run python -c 'import setuptools_scm; print(setuptools_scm.get_version())')"
+
+          echo "Expected: $expected"
+          echo "Actual:   $actual"
+
+          if [[ "$actual" != "$expected" ]]; then
+            echo "Version mismatch"
+            exit 1
+          fi
+
+      - name: Build Distributions
+        run: uv build
+
+      - name: Check Distributions
+        run: uv run --with twine twine check dist/*
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v5
+        with:
+          name: python-package-distributions-${{ github.ref_name }}
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/sudoku-strategy
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions-${{ github.ref_name }}
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
