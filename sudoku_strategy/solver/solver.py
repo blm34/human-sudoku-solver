@@ -6,6 +6,7 @@ from sudoku_strategy.strategy import (
     EliminateCandidatesStrategy,
     HiddenSingleStrategy,
     NakedSingleStrategy,
+    PointingPairStrategy,
 )
 
 if TYPE_CHECKING:
@@ -23,6 +24,7 @@ STRATEGIES = (
     EliminateCandidatesStrategy(),
     NakedSingleStrategy(),
     HiddenSingleStrategy(),
+    PointingPairStrategy(),
 )
 
 
