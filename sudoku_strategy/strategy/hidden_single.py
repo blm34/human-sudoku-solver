@@ -20,7 +20,7 @@ class HiddenSingleStrategy(AbsStrategy):
         return Deduction(
             strategy="Hidden Single",
             assignment=result,
-            explanation=f"{result.digit} is a hidden single in cell R{result.cell.row + 1}C{result.cell.col + 1}",
+            explanation=f"{result.digit} is a hidden single in cell {result.cell}",
         )
 
     def _find_hidden_single(self, analysis: GridAnalysis) -> CellDigit | None:

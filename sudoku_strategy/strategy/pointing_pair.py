@@ -29,9 +29,7 @@ class PointingPairStrategy(AbsStrategy):
             if len(eliminations) == 0:
                 continue
 
-            elimination_cells = (
-                f"R{elim.cell.row + 1}C{elim.cell.col + 1}" for elim in eliminations
-            )
+            elimination_cells = (f"{elim.cell}" for elim in eliminations)
             elimination_cells = ", ".join(elimination_cells)
 
             return Deduction(

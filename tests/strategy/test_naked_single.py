@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+from sudoku_strategy.grid.cell import Cell
 from sudoku_strategy.strategy.naked_single import NakedSingleStrategy
 
 
@@ -7,7 +8,7 @@ def test_finds_naked_single():
     # ARRANGE
     analysis = Mock()
 
-    cell = Mock(row=3, col=6)
+    cell = Cell(row=3, col=6)
 
     analysis.iterate.empty_cells.return_value = [cell]
     analysis.count_candidates_in_cell.return_value = 1
@@ -22,7 +23,7 @@ def test_finds_naked_single():
     assert deduction.assignment is not None
     assert deduction.assignment.cell is cell
     assert deduction.assignment.digit == 5
-    assert deduction.explanation == ("Cell R4C7 is a naked single with value 5.")
+    assert deduction.explanation == "Cell R4C7 is a naked single with value 5."
 
 
 def test_returns_none_when_no_naked_single():

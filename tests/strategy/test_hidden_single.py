@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+from sudoku_strategy.grid.cell import Cell
 from sudoku_strategy.strategy.hidden_single import HiddenSingleStrategy
 
 
@@ -8,9 +9,9 @@ def test_finds_hidden_single():
     analysis = Mock()
 
     cells = [
-        Mock(row=3, col=0),
-        Mock(row=3, col=1),
-        Mock(row=3, col=2),
+        Cell(row=3, col=0),
+        Cell(row=3, col=1),
+        Cell(row=3, col=2),
     ]
 
     analysis.iterate.units.return_value = (cells,)

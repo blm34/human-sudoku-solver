@@ -321,3 +321,22 @@ class TestCellIterators:
         # ASSERT
         assert len(cells) == len(filled_cells)
         assert all(cell in filled_cells for cell in cells)
+
+    @pytest.mark.parametrize(
+        "row, col, string",
+        (
+            (0, 0, "R1C1"),
+            (8, 8, "R9C9"),
+            (0, 5, "R1C6"),
+            (7, 2, "R8C3"),
+        ),
+    )
+    def test_string_gives_expected_representation(self, row, col, string):
+        # ARRANGE
+        cell = Cell(row, col)
+
+        # ACT
+        cell_str = str(cell)
+
+        # ASSERT
+        assert cell_str == string

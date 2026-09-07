@@ -22,7 +22,7 @@ class NakedSingleStrategy(AbsStrategy):
         return Deduction(
             strategy="Naked Single",
             assignment=CellDigit(cell=cell, digit=digit),
-            explanation=f"Cell R{cell.row + 1}C{cell.col + 1} is a naked single with value {digit}.",
+            explanation=f"Cell {cell} is a naked single with value {digit}.",
         )
 
     def _find_naked_single_cell(self, analysis: GridAnalysis) -> Cell | None:

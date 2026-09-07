@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+from sudoku_strategy.grid.cell import Cell
 from sudoku_strategy.strategy.deduction import CellDigit
 from sudoku_strategy.strategy.pointing_pair import PointingPair, PointingPairStrategy
 
@@ -8,10 +9,10 @@ def test_finds_pointing_pair_in_row():
     # ARRANGE
     analysis = Mock()
 
-    first = Mock(row=0, col=0, box=0)
-    second = Mock(row=0, col=1, box=0)
-    third = Mock(row=0, col=2, box=0)
-    fourth = Mock(row=0, col=3, box=1)
+    first = Cell(row=0, col=0)
+    second = Cell(row=0, col=1)
+    third = Cell(row=0, col=2)
+    fourth = Cell(row=0, col=3)
 
     box_cells = (first, second, third)
     row_cells = (first, second, third, fourth)
@@ -38,9 +39,9 @@ def test_finds_pointing_pair_in_column():
     # ARRANGE
     analysis = Mock()
 
-    first = Mock(row=0, col=0, box=0)
-    second = Mock(row=1, col=0, box=0)
-    third = Mock(row=3, col=0, box=4)
+    first = Cell(row=0, col=0)
+    second = Cell(row=1, col=0)
+    third = Cell(row=3, col=0)
 
     box_cells = (first, second, Mock(row=1, col=1, box=0))
     col_cells = (first, second, third)
