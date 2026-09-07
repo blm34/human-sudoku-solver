@@ -46,6 +46,9 @@ class Cell:
         """Gets the index of the box the cell is in (0-8)."""
         return (self.row // 3) * 3 + self.col // 3
 
+    def __str__(self) -> str:
+        return f"R{self.row + 1}C{self.col + 1}"
+
 
 class CellIterators:
     """Contains iterators over regions of the grid.
