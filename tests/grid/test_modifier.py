@@ -6,7 +6,7 @@ from sudoku_strategy.grid.cell import Cell
 from sudoku_strategy.grid.modifier import GridModifier
 from sudoku_strategy.grid.state import GridState
 from sudoku_strategy.grid.utils import ALL_DIGITS, digit_mask
-from sudoku_strategy.strategy.deduction import DigitDeduction, EliminationDeduction
+from sudoku_strategy.strategy.deduction import CellDigit, Deduction
 
 
 class TestGridModifier:
@@ -233,7 +233,9 @@ class TestGridModifier:
         # ARRANGE
         cell = Cell(7, 1)
         value = 3
-        deduction = DigitDeduction("strategy", "explanation", cell, value)
+        deduction = Deduction(
+            "strategy", "explanation", assignment=CellDigit(cell, value)
+        )
 
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
@@ -247,7 +249,7 @@ class TestGridModifier:
     def test_apply_elimination_deduction_with_one_elimination(self):
         # ARRANGE
         cell = Cell(2, 7)
-        deduction = EliminationDeduction("", "", [(cell, 5)])
+        deduction = Deduction("", "", eliminations=[CellDigit(cell, 5)])
 
         grid = GridState.create_empty()
         grid._candidates[cell.index] = ALL_DIGITS
@@ -264,12 +266,12 @@ class TestGridModifier:
         cell_1 = Cell(2, 7)
         cell_2 = Cell(1, 8)
         eliminations = [
-            (cell_1, 1),
-            (cell_1, 2),
-            (cell_1, 3),
-            (cell_2, 8),
+            CellDigit(cell_1, 1),
+            CellDigit(cell_1, 2),
+            CellDigit(cell_1, 3),
+            CellDigit(cell_2, 8),
         ]
-        deduction = EliminationDeduction("", "", eliminations)
+        deduction = Deduction("", "", eliminations=eliminations)
 
         grid = GridState.create_empty()
         grid._candidates = [ALL_DIGITS] * 81

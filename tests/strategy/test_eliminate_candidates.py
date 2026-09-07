@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+from sudoku_strategy.strategy.deduction import CellDigit
 from sudoku_strategy.strategy.eliminate_candidates import EliminateCandidatesStrategy
 
 
@@ -21,7 +22,7 @@ def test_finds_eliminatable_candidate():
     # ASSERT
     assert deduction is not None
     assert deduction.strategy == "Candidate Elimination"
-    assert deduction.eliminations == [(peer, 5)]
+    assert deduction.eliminations == [CellDigit(peer, 5)]
     assert deduction.explanation == (
         "The given candidates are already accounted for in a given unit"
     )
@@ -68,8 +69,8 @@ def test_finds_multiple_eliminatable_candidates():
     # ASSERT
     assert deduction is not None
     assert deduction.eliminations == [
-        (first_peer, 5),
-        (second_peer, 5),
+        CellDigit(first_peer, 5),
+        CellDigit(second_peer, 5),
     ]
 
 
@@ -106,8 +107,8 @@ def test_finds_eliminations_from_multiple_filled_cells():
     # ASSERT
     assert deduction is not None
     assert deduction.eliminations == [
-        (first_peer, 5),
-        (second_peer, 7),
+        CellDigit(first_peer, 5),
+        CellDigit(second_peer, 7),
     ]
 
 
