@@ -1,4 +1,4 @@
-# Sudoku Lib
+# Sudoku Strategy
 
 A Python library for representing, analysing, and solving Sudoku puzzles using
 human style solving techniques.
