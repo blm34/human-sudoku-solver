@@ -1,9 +1,9 @@
 """
 A json object containing three fields:
-    * puzzle_values: A list of 81 numbers representing the puzzles initial
+    * puzzle_digits: A list of 81 numbers representing the puzzles initial
         starting numbers. 0 is used to represent an empty cell.
-    * values: A list of 81 numbers representing the values filled in the grid.
-        This includes the values set in puzzle_values uses 0 to represent an
+    * digits: A list of 81 numbers representing the digits filled in the grid.
+        This includes the digits set in puzzle_digits uses 0 to represent an
         empty cell.
     * candidate_values: A list of 81 lists. Each sub list can contain the
         numbers 1-9 representing the candidates for the relevant cell.
@@ -11,8 +11,8 @@ A json object containing three fields:
 Example of the json format:
 
 {
-  "puzzle_values": [0, 0, 3, 0, ...],
-  "values": [1, 0, 3, 0, ...],
+  "puzzle_digits": [0, 0, 3, 0, ...],
+  "digits": [1, 0, 3, 0, ...],
   "candidate_values": [
     [],
     [7, 8, 9],
@@ -38,15 +38,15 @@ class JsonReader(AbsSudokuReader):
         """Read a json format from a text stream."""
         grid_dict = json.load(stream)
 
-        # Create grid with the given puzzle values
-        grid = GridState.new_puzzle(tuple(grid_dict["puzzle_values"]))
+        # Create grid with the given puzzle digits
+        grid = GridState.new_puzzle(tuple(grid_dict["puzzle_digits"]))
         modifier = GridModifier(grid)
 
-        # Add the entered values to the grid
-        for idx, val in enumerate(grid_dict["values"]):
+        # Add the entered digits to the grid
+        for idx, val in enumerate(grid_dict["digits"]):
             if val != 0:
                 cell = Cell.from_index(idx)
-                modifier.write_value(val, cell)
+                modifier.write_digit(val, cell)
 
         # Update the puzzle's candidates
         for idx, candidate_list in enumerate(grid_dict["candidate_values"]):

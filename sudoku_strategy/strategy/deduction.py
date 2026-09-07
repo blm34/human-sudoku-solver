@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class CellDigit:
-    """Represents a value or candidate that can be changed in a cell."""
+    """Represents a cell and a digit corresponding to that cell."""
 
     cell: Cell
     digit: int

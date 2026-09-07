@@ -12,7 +12,7 @@ def test_finds_eliminatable_candidate():
     peer = Mock(row=0, col=1)
 
     analysis.iterate.filled_cells.return_value = [filled_cell]
-    analysis.get_value_in_cell.return_value = 5
+    analysis.get_digit_in_cell.return_value = 5
     analysis.iterate.peers.return_value = [peer]
     analysis.get_cells_with_candidate.return_value = [peer]
 
@@ -36,7 +36,7 @@ def test_returns_none_when_no_candidates_can_be_eliminated():
     peer = Mock(row=0, col=1)
 
     analysis.iterate.filled_cells.return_value = [filled_cell]
-    analysis.get_value_in_cell.return_value = 5
+    analysis.get_digit_in_cell.return_value = 5
     analysis.iterate.peers.return_value = [peer]
     analysis.get_cells_with_candidate.return_value = []
 
@@ -56,7 +56,7 @@ def test_finds_multiple_eliminatable_candidates():
     second_peer = Mock(row=1, col=0)
 
     analysis.iterate.filled_cells.return_value = [filled_cell]
-    analysis.get_value_in_cell.return_value = 5
+    analysis.get_digit_in_cell.return_value = 5
     analysis.iterate.peers.return_value = [first_peer, second_peer]
     analysis.get_cells_with_candidate.return_value = [
         first_peer,
@@ -89,7 +89,7 @@ def test_finds_eliminations_from_multiple_filled_cells():
         second_filled,
     )
 
-    analysis.get_value_in_cell.side_effect = [5, 7]
+    analysis.get_digit_in_cell.side_effect = [5, 7]
 
     analysis.iterate.peers.side_effect = [
         [first_peer],
@@ -122,7 +122,7 @@ def test_checks_all_filled_cells():
 
     analysis.iterate.filled_cells.return_value = (first, second, third)
 
-    analysis.get_value_in_cell.side_effect = [5, 6, 7]
+    analysis.get_digit_in_cell.side_effect = [5, 6, 7]
     analysis.iterate.peers.side_effect = [
         [],
         [],
@@ -135,12 +135,12 @@ def test_checks_all_filled_cells():
 
     # ASSERT
     assert result is None
-    assert analysis.get_value_in_cell.call_count == 3
+    assert analysis.get_digit_in_cell.call_count == 3
     assert analysis.iterate.peers.call_count == 3
     assert analysis.get_cells_with_candidate.call_count == 3
 
 
-def test_gets_candidates_for_filled_cell_value_from_its_peers():
+def test_gets_candidates_for_filled_cell_digit_from_its_peers():
     # ARRANGE
     analysis = Mock()
 
@@ -151,7 +151,7 @@ def test_gets_candidates_for_filled_cell_value_from_its_peers():
     )
 
     analysis.iterate.filled_cells.return_value = [filled_cell]
-    analysis.get_value_in_cell.return_value = 5
+    analysis.get_digit_in_cell.return_value = 5
     analysis.iterate.peers.return_value = peers
     analysis.get_cells_with_candidate.return_value = []
 
@@ -159,6 +159,6 @@ def test_gets_candidates_for_filled_cell_value_from_its_peers():
     EliminateCandidatesStrategy().find(analysis)
 
     # ASSERT
-    analysis.get_value_in_cell.assert_called_once_with(filled_cell)
+    analysis.get_digit_in_cell.assert_called_once_with(filled_cell)
     analysis.iterate.peers.assert_called_once_with(filled_cell)
     analysis.get_cells_with_candidate.assert_called_once_with(peers, 5)

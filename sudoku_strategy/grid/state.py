@@ -11,45 +11,45 @@ class GridState:
 
     def __init__(
         self,
-        values: list[int],
+        digits: list[int],
         candidates: list[int],
-        puzzle_values: tuple[int, ...],
+        puzzle_digits: tuple[int, ...],
     ):
-        self._values = values
+        self._digits = digits
         self._candidates = candidates
-        self._puzzle_values = puzzle_values
+        self._puzzle_digits = puzzle_digits
 
     @classmethod
     def create_empty(cls) -> Self:
         return cls(
-            values=[0] * 81,
+            digits=[0] * 81,
             candidates=[0] * 81,
-            puzzle_values=tuple([0] * 81),
+            puzzle_digits=tuple([0] * 81),
         )
 
     @classmethod
-    def new_puzzle(cls, puzzle_values: tuple[int, ...]) -> Self:
-        if len(puzzle_values) != 81:
+    def new_puzzle(cls, puzzle_digits: tuple[int, ...]) -> Self:
+        if len(puzzle_digits) != 81:
             raise ValueError("Sudoku puzzle must have 81 cells.")
 
         return cls(
-            values=list(puzzle_values),
+            digits=list(puzzle_digits),
             candidates=[0] * 81,
-            puzzle_values=puzzle_values,
+            puzzle_digits=puzzle_digits,
         )
 
-    def value(self, cell: Cell) -> int:
-        return self._values[cell.index]
+    def digit(self, cell: Cell) -> int:
+        return self._digits[cell.index]
 
-    def write_value(self, cell: Cell, value: int):
-        if not 1 <= value <= 9:
+    def write_digit(self, cell: Cell, digit: int):
+        if not 1 <= digit <= 9:
             raise ValueError(
-                f"Sudoku cell value must be from 1-9, {value} is not valid."
+                f"Sudoku cell digit must be from 1-9, {digit} is not valid."
             )
-        self._values[cell.index] = value
+        self._digits[cell.index] = digit
 
-    def puzzle_value(self, cell: Cell) -> int:
-        return self._puzzle_values[cell.index]
+    def puzzle_digit(self, cell: Cell) -> int:
+        return self._puzzle_digits[cell.index]
 
     def candidates(self, cell: Cell) -> int:
         """Get the candidates for the given cell.
@@ -80,21 +80,21 @@ class GridState:
 
     def is_complete(self) -> bool:
         """Has the grid been fully filled in."""
-        return all(value != 0 for value in self._values)
+        return all(digit != 0 for digit in self._digits)
 
     def cell_empty(self, cell: Cell) -> bool:
-        """Returns true if the given cell has no value set."""
-        return self._values[cell.index] == 0
+        """Returns true if the given cell has no digit set."""
+        return self._digits[cell.index] == 0
 
     def copy(self) -> GridState:
         """Returns a deep copy of the current grid state."""
         return GridState(
-            values=self._values.copy(),
+            digits=self._digits.copy(),
             candidates=self._candidates.copy(),
-            puzzle_values=self._puzzle_values,
+            puzzle_digits=self._puzzle_digits,
         )
 
     def reset(self):
-        """Clear all user entered values and candidates."""
-        self._values = list(self._puzzle_values)
+        """Clear all user entered digits and candidates."""
+        self._digits = list(self._puzzle_digits)
         self._candidates = [0] * 81

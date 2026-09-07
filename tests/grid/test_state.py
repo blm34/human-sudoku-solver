@@ -6,13 +6,13 @@ from sudoku_strategy.grid.utils import ALL_DIGITS, digit_mask
 
 
 class TestGridState:
-    def test_create_empty_initialises_empty_grid_of_values(self):
+    def test_create_empty_initialises_empty_grid_of_digits(self):
         # ACT
         grid = GridState.create_empty()
 
         # ASSERT
-        assert len(grid._values) == 81
-        assert all(value == 0 for value in grid._values)
+        assert len(grid._digits) == 81
+        assert all(digit == 0 for digit in grid._digits)
 
     def test_create_empty_initialises_empty_grid_of_candidates(self):
         # ACT
@@ -22,103 +22,103 @@ class TestGridState:
         assert len(grid._candidates) == 81
         assert all(candidates == 0 for candidates in grid._candidates)
 
-    def test_create_empty_initialises_empty_grid_of_puzzle_values(self):
+    def test_create_empty_initialises_empty_grid_of_puzzle_digits(self):
         # ACT
         grid = GridState.create_empty()
 
         # ASSERT
-        assert len(grid._puzzle_values) == 81
-        assert all(value == 0 for value in grid._puzzle_values)
+        assert len(grid._puzzle_digits) == 81
+        assert all(digit == 0 for digit in grid._puzzle_digits)
 
-    def test_new_puzzle_adds_values_to_values(self):
+    def test_new_puzzle_adds_digits_to_digits(self):
         # ARRANGE
-        values = [0] * 81
-        values[8] = 1
-        values = tuple(values)
+        digits = [0] * 81
+        digits[8] = 1
+        digits = tuple(digits)
 
         # ACT
-        grid = GridState.new_puzzle(values)
+        grid = GridState.new_puzzle(digits)
 
         # ASSERT
-        assert grid._values.count(0) == 80
-        assert grid._values[8] == 1
+        assert grid._digits.count(0) == 80
+        assert grid._digits[8] == 1
 
     def test_new_puzzle_sets_all_candidates_to_zero(self):
         # ARRANGE
-        values = (0,) * 81
+        digits = (0,) * 81
 
         # ACT
-        grid = GridState.new_puzzle(values)
+        grid = GridState.new_puzzle(digits)
 
         # ASSERT
         assert len(grid._candidates) == 81
         assert all(candidates == 0 for candidates in grid._candidates)
 
-    def test_new_puzzle_sets_puzzle_values_correctly(self):
+    def test_new_puzzle_sets_puzzle_digits_correctly(self):
         # ARRANGE
-        values = [0] * 81
-        values[8] = 1
-        values = tuple(values)
+        digits = [0] * 81
+        digits[8] = 1
+        digits = tuple(digits)
 
         # ACT
-        grid = GridState.new_puzzle(values)
+        grid = GridState.new_puzzle(digits)
 
         # ASSERT
-        assert grid._puzzle_values.count(0) == 80
-        assert grid._puzzle_values[8] == 1
+        assert grid._puzzle_digits.count(0) == 80
+        assert grid._puzzle_digits[8] == 1
 
     @pytest.mark.parametrize("length", (10, 80, 82, 100))
-    def test_new_puzzle_raises_error_when_given_wrong_number_of_values(self, length):
+    def test_new_puzzle_raises_error_when_given_wrong_number_of_digits(self, length):
         # ARRANGE
-        values = (0,) * length
+        digits = (0,) * length
 
         with pytest.raises(ValueError):
             # ACT
-            GridState.new_puzzle(values)
+            GridState.new_puzzle(digits)
 
-    def test_value_returns_value_in_given_cell(self):
+    def test_digit_returns_digit_in_given_cell(self):
         # ARRANGE
         grid = GridState.create_empty()
         idx = 5
         cell = Cell.from_index(idx)
-        grid._values[idx] = 9
+        grid._digits[idx] = 9
 
         # ACT
-        value = grid.value(cell)
+        digit = grid.digit(cell)
 
         # ASSERT
-        assert value == 9
+        assert digit == 9
 
-    def test_write_value_adds_value_to_array(self):
+    def test_write_digit_adds_digit_to_array(self):
         # ARRANGE
         grid = GridState.create_empty()
         idx = 5
         cell = Cell.from_index(idx)
-        value = 1
+        digit = 1
 
         # ACT
-        grid.write_value(cell, value)
+        grid.write_digit(cell, digit)
 
         # ASSERT
-        assert grid._values[idx] == value
+        assert grid._digits[idx] == digit
 
-    def test_puzzle_value_returns_value_of_original_puzzle(self):
+    def test_puzzle_digit_returns_value_of_original_puzzle(self):
         # ARRANGE
         cell_idx = 4
         cell = Cell.from_index(cell_idx)
 
-        puzzle_values = [0] * 81
-        puzzle_values[cell_idx] = 3
-        puzzle_values = tuple(puzzle_values)
+        puzzle_digits = [0] * 81
+        puzzle_digits[cell_idx] = 3
+        puzzle_digits = tuple(puzzle_digits)
 
-        grid = GridState.new_puzzle(puzzle_values)
-        grid._values[cell_idx] = 5
+        grid = GridState.new_puzzle(puzzle_digits)
+        grid._digits[cell_idx] = 5
 
         # ACT
-        puzzle_value = grid.puzzle_value(cell)
+        puzzle_digit = grid.puzzle_digit(cell)
 
         # ASSERT
-        assert puzzle_value == 3
+        assert puzzle_digit == 3
 
     def test_candidates_returns_mask_for_given_cell(self):
         # ARRANGE
@@ -136,9 +136,9 @@ class TestGridState:
 
     def test_add_candidates_stores_new_candidates(self):
         # ARRANGE
-        values = [0] * 81
+        digits = [0] * 81
         candidates = [0] * 81
-        grid = GridState(values, candidates, tuple(values))
+        grid = GridState(digits, candidates, tuple(digits))
 
         idx = 17
         cell = Cell.from_index(idx)
@@ -182,7 +182,7 @@ class TestGridState:
         # ARRANGE
         grid = GridState.create_empty()
         for i in range(0, 81, 4):
-            grid._values[i] = (i % 9) + 1
+            grid._digits[i] = (i % 9) + 1
 
         # ACT
         complete = grid.is_complete()
@@ -194,7 +194,7 @@ class TestGridState:
         # ARRANGE
         grid = GridState.create_empty()
         for i in range(81):
-            grid._values[i] = (i % 9) + 1
+            grid._digits[i] = (i % 9) + 1
 
         # ACT
         complete = grid.is_complete()
@@ -217,7 +217,7 @@ class TestGridState:
         # ARRANGE
         grid = GridState.create_empty()
         cell = Cell(5, 5)
-        grid._values[cell.index] = 5
+        grid._digits[cell.index] = 5
 
         # ACT
         empty = grid.cell_empty(cell)
@@ -225,36 +225,36 @@ class TestGridState:
         # ASSERT
         assert not empty
 
-    def test_copy_returns_same_values_and_candidates(self):
+    def test_copy_returns_same_digits_and_candidates(self):
         # ARRANGE
         grid = GridState.create_empty()
         grid._candidates = [ALL_DIGITS] * 81
 
-        grid.write_value(Cell(0, 0), 5)
+        grid.write_digit(Cell(0, 0), 5)
         grid.eliminate_candidates(Cell(1, 1), 0b000001000)
 
         # ACT
         copy = grid.copy()
 
         # ASSERT
-        assert copy.value(Cell(0, 0)) == 5
+        assert copy.digit(Cell(0, 0)) == 5
         assert copy.candidates(Cell(1, 1)) == 0b111110111
 
         assert copy._candidates == grid._candidates
-        assert copy._values == grid._values
+        assert copy._digits == grid._digits
 
-    def test_copy_has_independent_values(self):
+    def test_copy_has_independent_digits(self):
         # ARRANGE
         grid = GridState.create_empty()
-        grid.write_value(Cell(0, 0), 5)
+        grid.write_digit(Cell(0, 0), 5)
 
         # ACT
         copy = grid.copy()
-        copy.write_value(Cell(0, 0), 7)
+        copy.write_digit(Cell(0, 0), 7)
 
         # ASSERT
-        assert copy.value(Cell(0, 0)) == 7
-        assert grid.value(Cell(0, 0)) == 5
+        assert copy.digit(Cell(0, 0)) == 7
+        assert grid.digit(Cell(0, 0)) == 5
 
     def test_copy_has_independent_candidates(self):
         # ARRANGE
@@ -277,25 +277,25 @@ class TestGridState:
         copy = grid.copy()
 
         # ACT
-        grid.write_value(Cell(0, 0), 5)
+        grid.write_digit(Cell(0, 0), 5)
         grid.eliminate_candidates(Cell(1, 1), 1 << 4)
 
         # ASSERT
-        assert copy.value(Cell(0, 0)) == 0
+        assert copy.digit(Cell(0, 0)) == 0
         assert copy.candidates(Cell(1, 1)) == ALL_DIGITS
 
-    def test_reset_clears_user_entered_values(self):
+    def test_reset_clears_user_entered_digits(self):
         # ARRANGE
-        puzzle_values = (1,) * 81
-        grid = GridState.new_puzzle(puzzle_values)
-        grid._values = [2] * 81
+        puzzle_digits = (1,) * 81
+        grid = GridState.new_puzzle(puzzle_digits)
+        grid._digits = [2] * 81
 
         # ACT
         grid.reset()
 
         # ASSERT
-        assert len(grid._values) == 81
-        assert all(value == 1 for value in grid._values)
+        assert len(grid._digits) == 81
+        assert all(digit == 1 for digit in grid._digits)
 
     def test_reset_sets_all_candidates_to_zero(self):
         # ARRANGE

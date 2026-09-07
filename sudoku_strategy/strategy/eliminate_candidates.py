@@ -31,9 +31,9 @@ class EliminateCandidatesStrategy(AbsStrategy):
         cells = []
 
         for cell in analysis.iterate.filled_cells():
-            value = analysis.get_value_in_cell(cell)
+            digit = analysis.get_digit_in_cell(cell)
             peers = analysis.iterate.peers(cell)
-            eliminatable = analysis.get_cells_with_candidate(peers, value)
-            cells += [CellDigit(cell=cell, digit=value) for cell in eliminatable]
+            eliminatable = analysis.get_cells_with_candidate(peers, digit)
+            cells += [CellDigit(cell=cell, digit=digit) for cell in eliminatable]
 
         return cells

@@ -23,87 +23,87 @@ class GridModifier:
         self._state = state
         self._cell_iterators = cell_iterators or CellIterators(state)
 
-    def add_value(self, value: int, cell: Cell):
-        """Write a value to a cell and update relevant candidates.
+    def add_digit(self, digit: int, cell: Cell):
+        """Write a digit to a cell and update relevant candidates.
 
-        Writes the value to the cell and updates the candidates in unset cells.
+        Writes the digit to the cell and updates the candidates in unset cells.
         Board state is updated to remain consistent.
 
         Args:
-            value: The value to write to the cell
-            cell: The cell to write the value to
+            digit: The digit to write to the cell
+            cell: The cell to write the digit to
         """
-        self.write_value(value, cell)
-        self.update_candidates(value, cell)
+        self.write_digit(digit, cell)
+        self.update_candidates(digit, cell)
 
-    def write_value(self, value: int, cell: Cell):
-        """Write a value to a cell.
+    def write_digit(self, digit: int, cell: Cell):
+        """Write a digit to a cell.
 
         Args:
-            value: The value to write to the cell
-            cell: The cell to write the value to
+            digit: The digit to write to the cell
+            cell: The cell to write the digit to
         """
-        self._state.write_value(cell, value)
+        self._state.write_digit(cell, digit)
 
-    def update_candidates(self, value: int, cell: Cell):
-        """Update candidates based on a value in a cell.
+    def update_candidates(self, digit: int, cell: Cell):
+        """Update candidates based on a digit in a cell.
 
         Args:
-            value: The value in the cell causing eliminations
+            digit: The digit in the cell causing eliminations
             cell: The cell whose peers are to be updated
         """
         self._state.eliminate_candidates(cell, ALL_DIGITS)
 
         for peer in self._cell_iterators.peers(cell):
-            self.remove_candidate(value, peer)
+            self.remove_candidate(digit, peer)
 
-    def _get_candidate_mask(self, values: Iterable[int]) -> int:
-        """Takes a list of values from 1-9 and turn them into a candidate bit mask."""
+    def _get_candidate_mask(self, digits: Iterable[int]) -> int:
+        """Takes a list of digits from 1-9 and turn them into a candidate bit mask."""
         mask = 0
-        for digit in values:
+        for digit in digits:
             mask |= digit_mask(digit)
         return mask
 
-    def remove_candidate(self, value: int, cell: Cell):
+    def remove_candidate(self, digit: int, cell: Cell):
         """Remove a candidate from a cell.
 
         If the given cell does not have the given candidate, no action is taken.
 
         Args:
-            value: The value of the candidate to remove
+            digits: The digits of the candidate to remove
             cell: The cell to remove the candidate from
         """
-        mask = digit_mask(value)
+        mask = digit_mask(digit)
         self._state.eliminate_candidates(cell, mask)
 
-    def remove_candidates(self, values: Iterable[int], cell: Cell):
+    def remove_candidates(self, digits: Iterable[int], cell: Cell):
         """Remove candidates from a cell.
 
         Args:
-            values: A list of candidates to remove from the cell
+            digits: A list of candidates to remove from the cell
             cell: The cell to remove the candidates from
         """
-        mask = self._get_candidate_mask(values)
+        mask = self._get_candidate_mask(digits)
         self._state.eliminate_candidates(cell, mask)
 
-    def add_candidate(self, value: int, cell: Cell):
+    def add_candidate(self, digit: int, cell: Cell):
         """Add a cadidate to a cell.
 
         Args:
-            value: The value of the cadidate to add
+            digit: The digit of the cadidate to add
             cell: The cell to add the candidate to
         """
-        mask = digit_mask(value)
+        mask = digit_mask(digit)
         self._state.add_candidates(cell, mask)
 
-    def add_candidates(self, values: Iterable[int], cell: Cell):
+    def add_candidates(self, digits: Iterable[int], cell: Cell):
         """Add candidates to a cell.
 
         Args:
-            values: A list of candidates to add to the cell
+            digits: A list of candidates to add to the cell
             cell: The cell to add the candidates to
         """
-        mask = self._get_candidate_mask(values)
+        mask = self._get_candidate_mask(digits)
         self._state.add_candidates(cell, mask)
 
     def apply(self, deduction: Deduction):
@@ -113,16 +113,16 @@ class GridModifier:
             deduction: The deduction to apply
         """
         if deduction.assignment is not None:
-            self.add_value(deduction.assignment.digit, deduction.assignment.cell)
+            self.add_digit(deduction.assignment.digit, deduction.assignment.cell)
 
         for elimination in deduction.eliminations:
             self.remove_candidate(elimination.digit, elimination.cell)
 
     def compute_candidates(self):
-        """Compute all candidates based off the current values in the grid."""
+        """Compute all candidates based off the current digits in the grid."""
         for cell in self._cell_iterators.cells():
             self._state.add_candidates(cell, ALL_DIGITS)
 
         for cell in self._cell_iterators.filled_cells():
-            value = self._state.value(cell)
-            self.update_candidates(value, cell)
+            digit = self._state.digit(cell)
+            self.update_candidates(digit, cell)

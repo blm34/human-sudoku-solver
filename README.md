@@ -5,7 +5,7 @@ human style solving techniques.
 
 The project is designed around a simple distinction between:
 
-* Grid state: the current values and candidates in a puzzle.
+* Grid state: the current digits and candidates in a puzzle.
 * Grid analysis: information that can be derived from the current state.
 * Strategies: human solving techniques that analyse a grid and identify
   deductions.
@@ -29,15 +29,15 @@ pip install sudoku_strategy
 from sudoku_strategy import GridState, Solver
 from sudoku_strategy.grid import GridModifier
 
-# Puzzle values is an 81 length tuple representing the starting state of the
+# Puzzle digits is an 81 length tuple representing the starting state of the
 # puzzle. `0` is used to represent an empty cell.
-puzzle_values = (0, 0, 5, 4, 0, ...)
+puzzle_digits = (0, 0, 5, 4, 0, ...)
 
-grid = GridState.new_puzzle(puzzle_values)
+grid = GridState.new_puzzle(puzzle_digits)
 
-# Add any user entered values to the puzzle
+# Add any user entered digits to the puzzle
 modifier = GridModifier(grid)
-modifier.write_value(5, Cell(7, 8))
+modifier.write_digit(5, Cell(7, 8))
 
 # Compute all candidates
 modifier.compute_candidates()
@@ -91,8 +91,8 @@ cell = Cell.from_index(33)
 
 `GridState` represents the current state of a Sudoku puzzle. It stores:
 
-* Puzzle's initial values
-* Entered values
+* Puzzle's initial digits
+* Entered digits
 * Candidates for each cell
 
 An empty grid can be created with:
@@ -106,7 +106,7 @@ grid = GridState.create_empty()
 The state can be queried:
 
 ```Python
-value = grid.value(cell)
+digit = grid.digit(cell)
 
 if grid.cell_empty(cell):
     print("Cell is empty")
@@ -117,7 +117,7 @@ if grid.is_complete():
 
 ## Modifying a Grid
 
-Editing a Sudoku grid is achieved with `GridModifier` It allows values and
+Editing a Sudoku grid is achieved with `GridModifier` It allows digits and
 candidates to be added or removed from a grid:
 
 ```Python
@@ -126,7 +126,7 @@ from sudoku_strategy.grid import GridModifier
 modifier = GridModifier(grid)
 
 # Write 8 to R9C4
-modifier.add_value(5, Cell(8, 3))
+modifier.add_digit(5, Cell(8, 3))
 
 # Calculate all candidate for the puzzle
 modifier.update_candidates()
@@ -187,7 +187,7 @@ single exists, it returns `None`.
 ## Deductions
 
 A deduction represents a conclusion reached by a solving strategy. A deduction
-can either show a cell that can have a value entered, or provide a list of
+can either show a cell that can have a digit entered, or provide a list of
 candidates that can be eliminated. For example:
 
 ```Python
@@ -291,12 +291,12 @@ number 1-9, and empty cells use a placeholder character, e.g. '.'
 
 The json format consists of an object with three fields:
 
-* Puzzle Values
+* Puzzle digits
     * A list of 81 digits representing the puzzle's starting state. 0 is used to
       represent an empty cell
-* Values
-    * A list of 81 digits representing digits added to the grid. These includ
-      the digits defined in puzzle values. 0 is used to represent an empty cell
+* digits
+    * A list of 81 digits representing digits added to the grid. These include
+      the digits defined in puzzle digits. 0 is used to represent an empty cell
 * Candidates Values
     * A list of 81 lists. Each sub list can contain the numbers 1-9 representing
       the candidates for the associated cell.

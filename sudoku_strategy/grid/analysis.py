@@ -70,18 +70,18 @@ class GridAnalysis:
         candidates = self._grid.candidates(cell)
         return candidates.bit_count()
 
-    def get_value_in_cell(self, cell: Cell) -> int:
-        """Get the value in a cell.
+    def get_digit_in_cell(self, cell: Cell) -> int:
+        """Get the digit in a cell.
 
-        If the cell has no value, return 0.
+        If the cell has no digit, return 0.
 
         Args:
-            cell: The cell to get the value for
+            cell: The cell to get the digit for
 
         Returns:
-            The value in the cell, or 0 if empty
+            The digit in the cell, or 0 if empty
         """
-        return self._grid.value(cell)
+        return self._grid.digit(cell)
 
     def cell_has_candidate(self, cell: Cell, digit: int) -> bool:
         """Return True if the given cell has the given candidate.

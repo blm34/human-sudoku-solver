@@ -17,12 +17,12 @@ class NakedSingleStrategy(AbsStrategy):
         if cell is None:
             return None
 
-        value = self._get_value_of_naked_single(analysis, cell)
+        digit = self._get_value_of_naked_single(analysis, cell)
 
         return Deduction(
             strategy="Naked Single",
-            assignment=CellDigit(cell=cell, digit=value),
-            explanation=f"Cell R{cell.row + 1}C{cell.col + 1} is a naked single with value {value}.",
+            assignment=CellDigit(cell=cell, digit=digit),
+            explanation=f"Cell R{cell.row + 1}C{cell.col + 1} is a naked single with value {digit}.",
         )
 
     def _find_naked_single_cell(self, analysis: GridAnalysis) -> Cell | None:
