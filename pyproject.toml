@@ -21,9 +21,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/blm34/human-sudoku-solver/"
-Repository = "https://github.com/blm34/human-sudoku-solver/"
-Issues = "https://github.com/blm34/human-sudoku-solver/issues"
+Homepage = "https://github.com/blm34/sudoku-strategy/"
+Repository = "https://github.com/blm34/sudoku-strategy/"
+Issues = "https://github.com/blm34/sudoku-strategy/issues"
 
 [dependency-groups]
 dev = [
