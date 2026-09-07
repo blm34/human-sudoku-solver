@@ -167,7 +167,7 @@ Strategies implement the `AbsStrategy` interface:
 ```Python
 class AbsStrategy(ABC):
     @abstractmethod
-    def find(self, analysis): ...
+    def find(self, analysis) -> Deduction | None: ...
 ```
 
 For example, the naked single strategy looks for an empty cell with exactly one
@@ -181,23 +181,21 @@ strategy = NakedSingleStrategy()
 deduction = strategy.find(analysis)
 ```
 
-If a naked single is found, the strategy returns a `DigitDeduction`. If no naked
+If a naked single is found, the strategy returns a `Deduction`. If no naked
 single exists, it returns `None`.
 
 ## Deductions
 
 A deduction represents a conclusion reached by a solving strategy. A deduction
-can either be a `DigitDeduction` which shows a new digit that can be added to the
-grid, or an `EliminationDeduction` which shows a candidate that can be
-eliminated. For example:
+can either show a cell that can have a value entered, or provide a list of
+candidates that can be eliminated. For example:
 
 ```Python
 from sudoku_strategy.strategy import DigitDeduction, EliminationDeduction
 
-DigitDeduction(
+Deduction(
     strategy="Naked Single",
-    cell=Cell(3, 6),
-    digit=5,
+    assignment=CellDigit(Cell(3, 6), 5),
     explanation="Cell R4C7 is a naked single with value 5.",
 )
 ```
