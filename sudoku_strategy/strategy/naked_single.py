@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from .abs_strategy import AbsStrategy
-from .deduction import DigitDeduction
+from .deduction import CellDigit, Deduction
 
 if TYPE_CHECKING:
     from sudoku_strategy.grid import Cell, GridAnalysis
@@ -10,20 +10,19 @@ if TYPE_CHECKING:
 class NakedSingleStrategy(AbsStrategy):
     """Detect naked singles in a sudoku grid."""
 
-    def find(self, analysis: GridAnalysis) -> DigitDeduction | None:
+    def find(self, analysis: GridAnalysis) -> Deduction | None:
         """Check the grid for naked singles."""
         cell = self._find_naked_single_cell(analysis)
 
         if cell is None:
             return None
 
-        value = self._get_value_of_naked_single(analysis, cell)
+        digit = self._get_value_of_naked_single(analysis, cell)
 
-        return DigitDeduction(
+        return Deduction(
             strategy="Naked Single",
-            cell=cell,
-            digit=value,
-            explanation=f"Cell R{cell.row + 1}C{cell.col + 1} is a naked single with value {value}.",
+            assignment=CellDigit(cell=cell, digit=digit),
+            explanation=f"Cell R{cell.row + 1}C{cell.col + 1} is a naked single with value {digit}.",
         )
 
     def _find_naked_single_cell(self, analysis: GridAnalysis) -> Cell | None:

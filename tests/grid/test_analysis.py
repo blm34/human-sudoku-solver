@@ -130,14 +130,14 @@ class TestGridAnalysis:
         # ARRANGE
         state = GridState.create_empty()
         target = Cell(0, 0)
-        written_value = 5
+        written_digit = 5
         state._candidates = [ALL_DIGITS] * 81
         state._candidates[target.index] = 0b111101111
         analysis = GridAnalysis(state)
         cells = (Cell(0, col) for col in range(9))
 
         # ACT
-        count = analysis.count_cells_with_candidate(cells, written_value)
+        count = analysis.count_cells_with_candidate(cells, written_digit)
 
         # ASSERT
         assert count == 8
@@ -170,19 +170,19 @@ class TestGridAnalysis:
         # ASSERT
         assert count == 6
 
-    def test_get_value_in_cell_checks_the_grid_state(self):
+    def test_get_digit_in_cell_checks_the_grid_state(self):
         # ARRANGE
         state = GridState.create_empty()
-        state.value = Mock()
+        state.digit = Mock()
         analysis = GridAnalysis(state)
 
         cell = Mock()
 
         # ACT
-        _ = analysis.get_value_in_cell(cell)
+        _ = analysis.get_digit_in_cell(cell)
 
         # ASSERT
-        state.value.assert_called_once_with(cell)
+        state.digit.assert_called_once_with(cell)
 
     @pytest.mark.parametrize(
         "mask, digit",

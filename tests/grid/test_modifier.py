@@ -6,51 +6,51 @@ from sudoku_strategy.grid.cell import Cell
 from sudoku_strategy.grid.modifier import GridModifier
 from sudoku_strategy.grid.state import GridState
 from sudoku_strategy.grid.utils import ALL_DIGITS, digit_mask
-from sudoku_strategy.strategy.deduction import DigitDeduction, EliminationDeduction
+from sudoku_strategy.strategy.deduction import CellDigit, Deduction
 
 
 class TestGridModifier:
-    def test_add_value_writes_the_value_to_the_cell(self):
+    def test_add_digit_writes_the_digit_to_the_cell(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
-        modifier.write_value = Mock()
+        modifier.write_digit = Mock()
 
-        value = 5
+        digit = 5
         cell = Cell(4, 6)
 
         # ACT
-        modifier.add_value(value, cell)
+        modifier.add_digit(digit, cell)
 
         # ASSERT
-        modifier.write_value.assert_called_once_with(value, cell)
+        modifier.write_digit.assert_called_once_with(digit, cell)
 
-    def test_add_value_eliminates_the_relevant_candidates(self):
+    def test_add_digit_eliminates_the_relevant_candidates(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
         modifier.update_candidates = Mock()
 
-        value = 5
+        digit = 5
         cell = Cell(4, 6)
 
         # ACT
-        modifier.add_value(value, cell)
+        modifier.add_digit(digit, cell)
 
         # ASSERT
-        modifier.update_candidates.assert_called_once_with(value, cell)
+        modifier.update_candidates.assert_called_once_with(digit, cell)
 
-    def test_write_value_stores_value(self):
+    def test_write_digit_stores_digit(self):
         # ARRANGE
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
         cell = Cell(3, 4)
 
         # ACT
-        modifier.write_value(7, cell)
+        modifier.write_digit(7, cell)
 
         # ASSERT
-        assert grid._values[cell.index] == 7
+        assert grid._digits[cell.index] == 7
 
     def test_update_candidates_removes_candidate_from_peers(self):
         # ARRANGE
@@ -152,7 +152,7 @@ class TestGridModifier:
         assert grid.candidates(unrelated) & mask
 
     @pytest.mark.parametrize(
-        "values, expected_mask",
+        "digits, expected_mask",
         (
             ((1, 2, 3), 0b000000111),
             ((4, 5, 6), 0b000111000),
@@ -163,13 +163,13 @@ class TestGridModifier:
             ((), 0b000000000),
         ),
     )
-    def test_get_candidate_mask(self, values, expected_mask):
+    def test_get_candidate_mask(self, digits, expected_mask):
         # ARRANGE
         grid = Mock()
         modifier = GridModifier(grid)
 
         # ACT
-        mask = modifier._get_candidate_mask(values)
+        mask = modifier._get_candidate_mask(digits)
 
         # ASSERT
         assert mask == expected_mask
@@ -229,11 +229,13 @@ class TestGridModifier:
         # ASSERT
         assert grid._candidates[cell.index] == 0b001110000
 
-    def test_apply_with_a_digit_deduction_adds_the_value(self):
+    def test_apply_with_a_digit_deduction_adds_the_digit(self):
         # ARRANGE
         cell = Cell(7, 1)
-        value = 3
-        deduction = DigitDeduction("strategy", "explanation", cell, value)
+        digit = 3
+        deduction = Deduction(
+            "strategy", "explanation", assignment=CellDigit(cell, digit)
+        )
 
         grid = GridState.create_empty()
         modifier = GridModifier(grid)
@@ -242,12 +244,12 @@ class TestGridModifier:
         modifier.apply(deduction)
 
         # Assert
-        assert grid._values[cell.index] == value
+        assert grid._digits[cell.index] == digit
 
     def test_apply_elimination_deduction_with_one_elimination(self):
         # ARRANGE
         cell = Cell(2, 7)
-        deduction = EliminationDeduction("", "", [(cell, 5)])
+        deduction = Deduction("", "", eliminations=[CellDigit(cell, 5)])
 
         grid = GridState.create_empty()
         grid._candidates[cell.index] = ALL_DIGITS
@@ -264,12 +266,12 @@ class TestGridModifier:
         cell_1 = Cell(2, 7)
         cell_2 = Cell(1, 8)
         eliminations = [
-            (cell_1, 1),
-            (cell_1, 2),
-            (cell_1, 3),
-            (cell_2, 8),
+            CellDigit(cell_1, 1),
+            CellDigit(cell_1, 2),
+            CellDigit(cell_1, 3),
+            CellDigit(cell_2, 8),
         ]
-        deduction = EliminationDeduction("", "", eliminations)
+        deduction = Deduction("", "", eliminations=eliminations)
 
         grid = GridState.create_empty()
         grid._candidates = [ALL_DIGITS] * 81
@@ -293,11 +295,11 @@ class TestGridModifier:
         # ASSERT
         assert all(candidates == ALL_DIGITS for candidates in grid._candidates)
 
-    def test_compute_candidates_sets_candidates_to_none_in_cells_with_values(self):
+    def test_compute_candidates_sets_candidates_to_none_in_cells_with_digits(self):
         # ARRANGE
         cell = Cell(5, 5)
         grid = GridState.create_empty()
-        grid.write_value(cell, 4)
+        grid.write_digit(cell, 4)
         modifier = GridModifier(grid)
 
         # ACT
@@ -310,7 +312,7 @@ class TestGridModifier:
         # ARRANGE
         cell = Cell(4, 4)
         grid = GridState.create_empty()
-        grid.write_value(cell, 4)
+        grid.write_digit(cell, 4)
         modifier = GridModifier(grid)
 
         peers = [Cell(0, 4), Cell(4, 0), Cell(5, 5)]
@@ -325,8 +327,8 @@ class TestGridModifier:
         # ARRANGE
         cell = Cell(5, 5)
         grid = GridState.create_empty()
-        grid.write_value(Cell(0, 5), 1)
-        grid.write_value(Cell(5, 0), 2)
+        grid.write_digit(Cell(0, 5), 1)
+        grid.write_digit(Cell(5, 0), 2)
         modifier = GridModifier(grid)
 
         # ACT

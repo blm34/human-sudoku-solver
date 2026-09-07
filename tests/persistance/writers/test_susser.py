@@ -4,11 +4,11 @@ from unittest.mock import Mock
 from sudoku_strategy.persistance.writers.susser import SusserWriter
 
 
-def test_writes_values_to_stream():
+def test_writes_digits_to_stream():
     # ARRANGE
-    values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 
-    grid = Mock(_values=values)
+    grid = Mock(_digits=digits)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -22,7 +22,7 @@ def test_writes_values_to_stream():
 
 def test_writes_empty_cells_as_dots():
     # ARRANGE
-    grid = Mock(_values=[0] * 81)
+    grid = Mock(_digits=[0] * 81)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -34,14 +34,14 @@ def test_writes_empty_cells_as_dots():
     assert stream.getvalue() == "." * 81
 
 
-def test_writes_zero_and_values_correctly():
+def test_writes_zero_and_digits_correctly():
     # ARRANGE
-    values = [0] * 81
-    values[0] = 5
-    values[40] = 7
-    values[80] = 3
+    digits = [0] * 81
+    digits[0] = 5
+    digits[40] = 7
+    digits[80] = 3
 
-    grid = Mock(_values=values)
+    grid = Mock(_digits=digits)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -58,11 +58,11 @@ def test_writes_zero_and_values_correctly():
     assert output[80] == "3"
 
 
-def test_writes_values_in_grid_order():
+def test_writes_digits_in_grid_order():
     # ARRANGE
-    values = list(range(1, 10)) * 9
+    digits = list(range(1, 10)) * 9
 
-    grid = Mock(_values=values)
+    grid = Mock(_digits=digits)
     stream = StringIO()
 
     writer = SusserWriter()
@@ -71,4 +71,4 @@ def test_writes_values_in_grid_order():
     writer.write(grid, stream)
 
     # ASSERT
-    assert stream.getvalue() == "".join(str(value) for value in values)
+    assert stream.getvalue() == "".join(str(digit) for digit in digits)

@@ -8,7 +8,7 @@ from sudoku_strategy.persistance.writers import JsonWriter, SusserWriter
 def test_susser_round_trip():
     # ARRANGE
     original = GridState.create_empty()
-    original._values = list(range(1, 10)) * 9
+    original._digits = list(range(1, 10)) * 9
 
     stream = StringIO()
 
@@ -20,20 +20,20 @@ def test_susser_round_trip():
     result = SusserReader().read(stream)
 
     # ASSERT
-    assert result._values == original._values
+    assert result._digits == original._digits
 
 
 def test_json_round_trip():
     # ARRANGE
-    puzzle_values = [0] * 81
+    puzzle_digits = [0] * 81
     for val, idx in enumerate(range(0, 81, 10), start=1):
-        puzzle_values[idx] = val
+        puzzle_digits[idx] = val
 
-    original = GridState.new_puzzle(tuple(puzzle_values))
+    original = GridState.new_puzzle(tuple(puzzle_digits))
 
-    original._values[1] = 4
-    original._values[2] = 5
-    original._values[9] = 6
+    original._digits[1] = 4
+    original._digits[2] = 5
+    original._digits[9] = 6
 
     original._candidates[3] = 0b111100110
     original._candidates[4] = 0b111100110
@@ -48,4 +48,4 @@ def test_json_round_trip():
     result = JsonReader().read(stream)
 
     # ASSERT
-    assert result._values == original._values
+    assert result._digits == original._digits

@@ -1,9 +1,9 @@
 """
 A json object containing three fields:
-    * puzzle_values: A list of 81 numbers representing the puzzles initial
+    * puzzle_digits: A list of 81 numbers representing the puzzles initial
         starting numbers. 0 is used to represent an empty cell.
-    * values: A list of 81 numbers representing the values filled in the grid.
-        This includes the values set in puzzle_values uses 0 to represent an
+    * digits: A list of 81 numbers representing the digits filled in the grid.
+        This includes the digits set in puzzle_digits uses 0 to represent an
         empty cell.
     * candidate_values: A list of 81 lists. Each sub list can contain the
         numbers 1-9 representing the candidates for the relevant cell.
@@ -11,8 +11,8 @@ A json object containing three fields:
 Example of the json format:
 
 {
-  "puzzle_values": [0, 0, 3, 0, ...],
-  "values": [1, 0, 3, 0, ...],
+  "puzzle_digits": [0, 0, 3, 0, ...],
+  "digits": [1, 0, 3, 0, ...],
   "candidate_values": [
     [],
     [7, 8, 9],
@@ -41,15 +41,15 @@ class JsonWriter(AbsSudokuWriter):
         analysis = GridAnalysis(grid)
 
         grid_dict = {
-            "puzzle_values": [],
-            "values": [],
+            "puzzle_digits": [],
+            "digits": [],
             "candidate_values": [],
         }
 
         for cell in analysis.iterate.cells():
-            grid_dict["puzzle_values"].append(grid.puzzle_value(cell))
+            grid_dict["puzzle_digits"].append(grid.puzzle_digit(cell))
 
-            grid_dict["values"].append(grid.value(cell))
+            grid_dict["digits"].append(grid.digit(cell))
 
             candidates = analysis.get_candidates_for_cell(cell)
             grid_dict["candidate_values"].append(list(candidates))

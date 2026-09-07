@@ -19,8 +19,9 @@ def test_finds_naked_single():
     # ASSERT
     assert deduction is not None
     assert deduction.strategy == "Naked Single"
-    assert deduction.cell is cell
-    assert deduction.digit == 5
+    assert deduction.assignment is not None
+    assert deduction.assignment.cell is cell
+    assert deduction.assignment.digit == 5
     assert deduction.explanation == ("Cell R4C7 is a naked single with value 5.")
 
 
@@ -60,8 +61,9 @@ def test_returns_first_naked_single():
 
     # ASSERT
     assert deduction is not None
-    assert deduction.cell is second
-    assert deduction.digit == 7
+    assert deduction.assignment is not None
+    assert deduction.assignment.cell is second
+    assert deduction.assignment.digit == 7
 
 
 def test_stops_after_finding_naked_single():

@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+from sudoku_strategy.strategy.deduction import CellDigit
 from sudoku_strategy.strategy.pointing_pair import PointingPair, PointingPairStrategy
 
 
@@ -27,7 +28,7 @@ def test_finds_pointing_pair_in_row():
     # ASSERT
     assert deduction is not None
     assert deduction.strategy == "Pointing Pair"
-    assert deduction.eliminations == [(fourth, 1)]
+    assert deduction.eliminations == [CellDigit(fourth, 1)]
     assert deduction.explanation == (
         "Candidates for 1 in box 0 allow for eliminations in R1C4."
     )
@@ -56,7 +57,7 @@ def test_finds_pointing_pair_in_column():
     # ASSERT
     assert deduction is not None
     assert deduction.strategy == "Pointing Pair"
-    assert deduction.eliminations == [(third, 1)]
+    assert deduction.eliminations == [CellDigit(third, 1)]
     assert deduction.explanation == (
         "Candidates for 1 in box 0 allow for eliminations in R4C1."
     )
@@ -174,7 +175,7 @@ def test_finds_first_pointing_pair_with_elimination():
     # ASSERT
     assert deduction is not None
     assert deduction.strategy == "Pointing Pair"
-    assert deduction.eliminations == [(first_elimination, 2)]
+    assert deduction.eliminations == [CellDigit(first_elimination, 2)]
 
 
 def test_get_eliminations_ignores_cells_in_pointing_pair_box():
@@ -199,7 +200,7 @@ def test_get_eliminations_ignores_cells_in_pointing_pair_box():
     )
 
     # ASSERT
-    assert eliminations == [(elimination_cell, 5)]
+    assert eliminations == [CellDigit(elimination_cell, 5)]
     analysis.cell_has_candidate.assert_called_once_with(
         elimination_cell,
         5,
@@ -230,8 +231,8 @@ def test_get_eliminations_only_returns_cells_with_candidate():
 
     # ASSERT
     assert eliminations == [
-        (first, 7),
-        (third, 7),
+        CellDigit(first, 7),
+        CellDigit(third, 7),
     ]
 
 

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from .abs_strategy import AbsStrategy
-from .deduction import EliminationDeduction
+from .deduction import CellDigit, Deduction
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -21,7 +21,7 @@ class PointingPair:
 class PointingPairStrategy(AbsStrategy):
     """Detect pointing pairs that can eliminate candidates."""
 
-    def find(self, analysis: GridAnalysis) -> EliminationDeduction | None:
+    def find(self, analysis: GridAnalysis) -> Deduction | None:
         """Check the grid for pointing pairs giving eliminations."""
         for pointing_pair in self._find_pointing_pairs(analysis):
             eliminations = self._get_eliminations(analysis, pointing_pair)
@@ -30,11 +30,11 @@ class PointingPairStrategy(AbsStrategy):
                 continue
 
             elimination_cells = (
-                f"R{elim[0].row + 1}C{elim[0].col + 1}" for elim in eliminations
+                f"R{elim.cell.row + 1}C{elim.cell.col + 1}" for elim in eliminations
             )
             elimination_cells = ", ".join(elimination_cells)
 
-            return EliminationDeduction(
+            return Deduction(
                 strategy="Pointing Pair",
                 explanation=f"Candidates for {pointing_pair.digit} in box {pointing_pair.box} allow for eliminations in {elimination_cells}.",
                 eliminations=eliminations,
@@ -75,7 +75,7 @@ class PointingPairStrategy(AbsStrategy):
         self,
         analysis: GridAnalysis,
         pointing_pair: PointingPair,
-    ) -> list[tuple[Cell, int]]:
+    ) -> list[CellDigit]:
         """Get eliminations inferred by a pointing pair."""
         eliminations = []
         for cell in pointing_pair.cells:
@@ -83,6 +83,6 @@ class PointingPairStrategy(AbsStrategy):
                 continue
 
             if analysis.cell_has_candidate(cell, pointing_pair.digit):
-                eliminations.append((cell, pointing_pair.digit))
+                eliminations.append(CellDigit(cell=cell, digit=pointing_pair.digit))
 
         return eliminations

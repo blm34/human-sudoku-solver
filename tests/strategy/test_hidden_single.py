@@ -27,8 +27,9 @@ def test_finds_hidden_single():
     # ASSERT
     assert deduction is not None
     assert deduction.strategy == "Hidden Single"
-    assert deduction.cell is cells[1]
-    assert deduction.digit == 3
+    assert deduction.assignment is not None
+    assert deduction.assignment.cell is cells[1]
+    assert deduction.assignment.digit == 3
     assert deduction.explanation == ("3 is a hidden single in cell R4C2")
 
 
@@ -75,8 +76,9 @@ def test_returns_first_hidden_single():
 
     # ASSERT
     assert deduction is not None
-    assert deduction.cell is first
-    assert deduction.digit == 1
+    assert deduction.assignment is not None
+    assert deduction.assignment.cell is first
+    assert deduction.assignment.digit == 1
 
 
 def test_stops_after_finding_hidden_single():

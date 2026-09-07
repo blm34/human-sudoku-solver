@@ -26,18 +26,18 @@ class SusserReader(AbsSudokuReader):
 
         empty = self._get_empty_character(text)
 
-        values = []
+        digits = []
         for char in text:
             if char == empty:
-                values.append(0)
+                digits.append(0)
             else:
-                values.append(int(char))
+                digits.append(int(char))
 
-        return GridState.new_puzzle(tuple(values))
+        return GridState.new_puzzle(tuple(digits))
 
     # TODO: This should work for any character - not just the 'prefered' ones
     def _get_empty_character(self, text: str) -> str:
-        """Determine the character used to represent no value."""
+        """Determine the character used to represent no digit."""
         valid_numbers = ("1", "2", "3", "4", "5", "6", "7", "8", "9")
         digit_count = sum(1 for char in text if char in valid_numbers)
 

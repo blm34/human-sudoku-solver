@@ -5,13 +5,13 @@ from sudoku_strategy.grid import Cell
 from sudoku_strategy.persistance.readers.json import JsonReader
 
 
-def test_reads_puzzle_values():
+def test_reads_puzzle_digits():
     # ARRANGE
-    puzzle_values = [1, 2, 3] + [0] * 78
+    puzzle_digits = [1, 2, 3] + [0] * 78
     text = json.dumps(
         {
-            "puzzle_values": puzzle_values,
-            "values": [0] * 81,
+            "puzzle_digits": puzzle_digits,
+            "digits": [0] * 81,
             "candidate_values": [[] for _ in range(81)],
         }
     )
@@ -23,18 +23,18 @@ def test_reads_puzzle_values():
     grid = reader.read(stream)
 
     # ASSERT
-    assert grid._puzzle_values[0] == 1
-    assert grid._puzzle_values[1] == 2
-    assert grid._puzzle_values[2] == 3
-    assert all(value == 0 for value in grid._puzzle_values[3:])
+    assert grid._puzzle_digits[0] == 1
+    assert grid._puzzle_digits[1] == 2
+    assert grid._puzzle_digits[2] == 3
+    assert all(digit == 0 for digit in grid._puzzle_digits[3:])
 
 
 def test_leaves_empty_puzzle_cells_unset():
     # ARRANGE
     text = json.dumps(
         {
-            "puzzle_values": [0] * 81,
-            "values": [0] * 81,
+            "puzzle_digits": [0] * 81,
+            "digits": [0] * 81,
             "candidate_values": [[] for _ in range(81)],
         }
     )
@@ -46,20 +46,20 @@ def test_leaves_empty_puzzle_cells_unset():
     grid = reader.read(stream)
 
     # ASSERT
-    assert all(value == 0 for value in grid._puzzle_values)
+    assert all(digit == 0 for digit in grid._puzzle_digits)
 
 
-def test_reads_values_into_correct_cells():
+def test_reads_digits_into_correct_cells():
     # ARRANGE
-    values = [0] * 81
-    values[0] = 1
-    values[Cell(4, 4).index] = 5
-    values[Cell(8, 8).index] = 9
+    digits = [0] * 81
+    digits[0] = 1
+    digits[Cell(4, 4).index] = 5
+    digits[Cell(8, 8).index] = 9
 
     text = json.dumps(
         {
-            "puzzle_values": [0] * 81,
-            "values": values,
+            "puzzle_digits": [0] * 81,
+            "digits": digits,
             "candidate_values": [[] for _ in range(81)],
         }
     )
@@ -71,9 +71,9 @@ def test_reads_values_into_correct_cells():
     grid = reader.read(stream)
 
     # ASSERT
-    assert grid._values[Cell(0, 0).index] == 1
-    assert grid._values[Cell(4, 4).index] == 5
-    assert grid._values[Cell(8, 8).index] == 9
+    assert grid._digits[Cell(0, 0).index] == 1
+    assert grid._digits[Cell(4, 4).index] == 5
+    assert grid._digits[Cell(8, 8).index] == 9
 
 
 def test_reads_candidate_values_into_correct_cells():
@@ -85,8 +85,8 @@ def test_reads_candidate_values_into_correct_cells():
 
     text = json.dumps(
         {
-            "puzzle_values": [0] * 81,
-            "values": [0] * 81,
+            "puzzle_digits": [0] * 81,
+            "digits": [0] * 81,
             "candidate_values": candidate_values,
         }
     )

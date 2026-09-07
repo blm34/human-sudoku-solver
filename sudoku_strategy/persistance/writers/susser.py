@@ -20,8 +20,8 @@ if TYPE_CHECKING:
 class SusserWriter(AbsSudokuWriter):
     def write(self, grid: GridState, stream: TextIO):
         """Write a susser format from a text stream"""
-        for value in grid._values:
-            if value == 0:
+        for digit in grid._digits:
+            if digit == 0:
                 stream.write(".")
             else:
-                stream.write(str(value))
+                stream.write(str(digit))
