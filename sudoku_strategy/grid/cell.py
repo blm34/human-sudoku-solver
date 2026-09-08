@@ -38,12 +38,20 @@ class Cell:
 
     @property
     def index(self) -> int:
-        """Gets the index of the cell."""
+        """The index of the cell (0-80).
+
+        Index 0 is the top left cell, indexes increase along each row and then
+        down each column to 80 in the bottom right cell.
+        """
         return self.row * 9 + self.col
 
     @property
     def box(self) -> int:
-        """Gets the index of the box the cell is in (0-8)."""
+        """The index of the box the cell is in (0-8).
+
+        Box 0 is top left, with 1 to its left etc. down to box 8 in the bottom
+        right.
+        """
         return (self.row // 3) * 3 + self.col // 3
 
     def __str__(self) -> str:
