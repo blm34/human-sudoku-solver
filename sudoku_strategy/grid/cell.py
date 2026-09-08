@@ -126,48 +126,79 @@ class CellIterators:
     Methods:
         cells
         empty_cells
+        filled_cells
+        units
+        lines
         row
         col
         box
         peers
     """
 
+    _ALL_CELLS = (1 << 81) - 1
+    _ROW_MASKS = tuple(((1 << 9) - 1) << row * 9 for row in range(9))
+    _COL_MASKS = tuple(
+        sum(1 << (col + 9 * row) for row in range(9)) for col in range(9)
+    )
+    _BOX_MASKS = tuple(
+        sum(
+            1 << (row * 9 + col)
+            for row in range(box_row * 3, box_row * 3 + 3)
+            for col in range(box_col * 3, box_col * 3 + 3)
+        )
+        for box_row in range(3)
+        for box_col in range(3)
+    )
+
     def __init__(self, grid: GridState):
         self._grid = grid
 
-    def cells(self) -> tuple[Cell, ...]:
-        """Iterate over all cells in the grid.
+    def cells(self) -> Cells:
+        """Get all cells in the grid.
 
         Returns:
             A tuple of all cells in the grid
         """
-        return tuple(Cell.from_index(idx) for idx in range(81))
+        return Cells(self._ALL_CELLS)
 
-    def empty_cells(self) -> tuple[Cell, ...]:
-        """Iterate over all the empty cells in the grid.
+    def empty_cells(self) -> Cells:
+        """Get all the empty cells in the grid.
 
         Returns:
             A tuple of empty cells
         """
-        return tuple(cell for cell in self.cells() if self._grid.cell_empty(cell))
+        mask = sum(
+            1 << cell.index for cell in self.cells() if self._grid.cell_empty(cell)
+        )
+        return Cells(mask)
 
-    def filled_cells(self) -> tuple[Cell, ...]:
-        """Iterate over all non-empty cells in the grid.
+    def filled_cells(self) -> Cells:
+        """Get all non-empty cells in the grid.
 
         Returns:
             A tuple of filled cells
         """
-        return tuple(cell for cell in self.cells() if not self._grid.cell_empty(cell))
+        mask = sum(
+            1 << cell.index for cell in self.cells() if not self._grid.cell_empty(cell)
+        )
+        return Cells(mask)
 
-    def units(self) -> tuple[tuple[Cell, ...], ...]:
+    def units(self) -> tuple[Cells, ...]:
+        """Get a tuple of all rows, cols, and boxes."""
         return tuple(
             unit
             for idx in range(9)
             for unit in (self.row(idx), self.col(idx), self.box(idx))
         )
 
-    def row(self, row_num: int) -> tuple[Cell, ...]:
-        """Iterate over cells in a row.
+    def lines(self) -> tuple[Cells, ...]:
+        """Get a tuple of all rows and columns."""
+        return tuple(
+            unit for idx in range(9) for unit in (self.row(idx), self.col(idx))
+        )
+
+    def row(self, row_num: int) -> Cells:
+        """Get the cells for the given row.
 
         Args:
             row_num: The row to iterate over
@@ -175,10 +206,11 @@ class CellIterators:
         Returns:
             A tuple of cells from the given row
         """
-        return tuple(Cell(row_num, col) for col in range(9))
+        mask = self._ROW_MASKS[row_num]
+        return Cells(mask)
 
-    def col(self, col_num: int) -> tuple[Cell, ...]:
-        """Iterate over cells in a column.
+    def col(self, col_num: int) -> Cells:
+        """Get the cells for the given column.
 
         Args:
             col_num: The column to iterate over
@@ -186,10 +218,11 @@ class CellIterators:
         Returns:
             A tuple of cells from the given column
         """
-        return tuple(Cell(row, col_num) for row in range(9))
+        mask = self._COL_MASKS[col_num]
+        return Cells(mask)
 
-    def box(self, box_num: int) -> tuple[Cell, ...]:
-        """Iterate over cells in a box.
+    def box(self, box_num: int) -> Cells:
+        """Get the cells for the given box.
 
         Args:
             box_num: The index of the box to iterate over
@@ -197,14 +230,10 @@ class CellIterators:
         Returns:
             A tuple of cells from the given box
         """
-        box_row, box_col = divmod(box_num, 3)
-        return tuple(
-            Cell(box_row * 3 + row, box_col * 3 + col)
-            for row in range(3)
-            for col in range(3)
-        )
+        mask = self._BOX_MASKS[box_num]
+        return Cells(mask)
 
-    def peers(self, cell: Cell) -> tuple[Cell, ...]:
+    def peers(self, cell: Cell) -> Cells:
         """Iterate over all the peers of a given cell.
 
         Args:
@@ -213,8 +242,6 @@ class CellIterators:
         Returns:
             A tuple of cells that are peers of the given cell
         """
-        peers = (
-            set(self.row(cell.row)) | set(self.col(cell.col)) | set(self.box(cell.box))
-        )
+        peers = self.row(cell.row) | self.col(cell.col) | self.box(cell.box)
         peers.remove(cell)
-        return tuple(peers)
+        return peers

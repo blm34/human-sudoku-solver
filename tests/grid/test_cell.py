@@ -298,10 +298,10 @@ class TestCellIterators:
         iterator = CellIterators(Mock())
 
         # ACT
-        length = len(iterator.row(row))
+        cells = iterator.row(row)
 
         # ASSERT
-        assert length == 9
+        assert len(cells) == 9
 
     @pytest.mark.parametrize("col", range(9))
     def test_cols_have_with_nine_values(self, col):
@@ -309,10 +309,10 @@ class TestCellIterators:
         iterator = CellIterators(Mock())
 
         # ACT
-        length = len(iterator.col(col))
+        cells = iterator.col(col)
 
         # ASSERT
-        assert length == 9
+        assert len(cells) == 9
 
     @pytest.mark.parametrize("box", range(9))
     def test_boxes_have_nine_values(self, box):
@@ -320,10 +320,10 @@ class TestCellIterators:
         iterator = CellIterators(Mock())
 
         # ACT
-        length = len(iterator.box(box))
+        cells = iterator.box(box)
 
         # ASSERT
-        assert length == 9
+        assert len(cells) == 9
 
     def test_units_produces_27_units_with_nine_values(self):
         # ARRANGE
@@ -344,16 +344,16 @@ class TestCellIterators:
         cells = iterator.row(0)
 
         # ASSERT
-        assert [(cell.row, cell.col) for cell in cells] == [
-            (0, 0),
-            (0, 1),
-            (0, 2),
-            (0, 3),
-            (0, 4),
-            (0, 5),
-            (0, 6),
-            (0, 7),
-            (0, 8),
+        assert list(cells) == [
+            Cell(0, 0),
+            Cell(0, 1),
+            Cell(0, 2),
+            Cell(0, 3),
+            Cell(0, 4),
+            Cell(0, 5),
+            Cell(0, 6),
+            Cell(0, 7),
+            Cell(0, 8),
         ]
 
     def test_first_column_contains_expected_cells(self):
@@ -364,16 +364,16 @@ class TestCellIterators:
         cells = iterator.col(0)
 
         # ASSERT
-        assert [(cell.row, cell.col) for cell in cells] == [
-            (0, 0),
-            (1, 0),
-            (2, 0),
-            (3, 0),
-            (4, 0),
-            (5, 0),
-            (6, 0),
-            (7, 0),
-            (8, 0),
+        assert list(cells) == [
+            Cell(0, 0),
+            Cell(1, 0),
+            Cell(2, 0),
+            Cell(3, 0),
+            Cell(4, 0),
+            Cell(5, 0),
+            Cell(6, 0),
+            Cell(7, 0),
+            Cell(8, 0),
         ]
 
     def test_first_box_contains_expected_cells(self):
@@ -384,16 +384,16 @@ class TestCellIterators:
         cells = iterator.box(0)
 
         # ASSERT
-        assert [(cell.row, cell.col) for cell in cells] == [
-            (0, 0),
-            (0, 1),
-            (0, 2),
-            (1, 0),
-            (1, 1),
-            (1, 2),
-            (2, 0),
-            (2, 1),
-            (2, 2),
+        assert list(cells) == [
+            Cell(0, 0),
+            Cell(0, 1),
+            Cell(0, 2),
+            Cell(1, 0),
+            Cell(1, 1),
+            Cell(1, 2),
+            Cell(2, 0),
+            Cell(2, 1),
+            Cell(2, 2),
         ]
 
     @pytest.mark.parametrize("cell_idx", range(81))
@@ -404,10 +404,9 @@ class TestCellIterators:
 
         # ACT
         peers = iterator.peers(cell)
-        count = len(peers)
 
         # ASSERT
-        assert count == 20
+        assert len(peers) == 20
 
     @pytest.mark.parametrize(
         ("row", "col"),
@@ -452,17 +451,16 @@ class TestCellIterators:
 
         # ACT
         peers = iterator.peers(cell)
-        unique_peers = set(peers)
 
         # ASSERT
-        assert len(unique_peers) == 20
+        assert len(set(peers)) == 20
 
     def test_cells_returns_all_81_cells(self):
         # ARRANGE
         iterator = CellIterators(Mock())
 
         # ACT
-        cells = list(iterator.cells())
+        cells = iterator.cells()
 
         # ASSERT
         assert len(cells) == 81
