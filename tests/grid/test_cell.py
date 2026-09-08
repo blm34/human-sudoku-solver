@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from sudoku_strategy.grid.cell import Cell, CellIterators
+from sudoku_strategy.grid.cell import Cell, CellIterators, Cells
 
 
 class TestCell:
@@ -85,6 +85,210 @@ class TestCell:
 
         # ACT & ASSERT
         assert first == second
+
+
+class TestCells:
+    def test_empty_cells_contains_no_cells(self):
+        # ARRANGE
+        cells = Cells(0)
+
+        # ACT
+        result = list(cells)
+
+        # ASSERT
+        assert result == []
+
+    def test_cells_contains_single_cell(self):
+        # ARRANGE
+        cell = Cell(4, 4)
+        cells = Cells(1 << cell.index)
+
+        # ACT
+        result = list(cells)
+
+        # ASSERT
+        assert result == [cell]
+
+    def test_cells_contains_expected_cells(self):
+        # ARRANGE
+        expected_cells = [
+            Cell(0, 0),
+            Cell(1, 4),
+            Cell(4, 8),
+            Cell(8, 3),
+        ]
+        mask = sum(1 << cell.index for cell in expected_cells)
+        cells = Cells(mask)
+
+        # ACT
+        result = list(cells)
+
+        # ASSERT
+        assert result == expected_cells
+
+    def test_cells_iteration_is_reusable(self):
+        # ARRANGE
+        cells = Cells(
+            (1 << Cell(0, 0).index) | (1 << Cell(4, 4).index) | (1 << Cell(8, 8).index)
+        )
+
+        # ACT
+        first_iteration = list(cells)
+        second_iteration = list(cells)
+
+        # ASSERT
+        assert first_iteration == second_iteration
+
+    def test_add_adds_cell(self):
+        # ARRANGE
+        cells = Cells(0)
+        cell = Cell(4, 4)
+
+        # ACT
+        cells.add(cell)
+
+        # ASSERT
+        assert list(cells) == [cell]
+
+    def test_add_does_not_remove_existing_cells(self):
+        # ARRANGE
+        existing_cell = Cell(0, 0)
+        new_cell = Cell(8, 8)
+        cells = Cells(1 << existing_cell.index)
+
+        # ACT
+        cells.add(new_cell)
+
+        # ASSERT
+        assert set(cells) == {existing_cell, new_cell}
+
+    def test_remove_removes_cell(self):
+        # ARRANGE
+        cell = Cell(4, 4)
+        cells = Cells(1 << cell.index)
+
+        # ACT
+        cells.remove(cell)
+
+        # ASSERT
+        assert list(cells) == []
+
+    def test_remove_does_not_remove_other_cells(self):
+        # ARRANGE
+        remaining_cell = Cell(0, 0)
+        removed_cell = Cell(8, 8)
+        mask = (1 << remaining_cell.index) | (1 << removed_cell.index)
+        cells = Cells(mask)
+
+        # ACT
+        cells.remove(removed_cell)
+
+        # ASSERT
+        assert list(cells) == [remaining_cell]
+
+    def test_and_returns_intersection(self):
+        # ARRANGE
+        first = Cells(
+            (1 << Cell(0, 0).index) | (1 << Cell(4, 4).index) | (1 << Cell(8, 8).index)
+        )
+        second = Cells(
+            (1 << Cell(0, 0).index) | (1 << Cell(1, 1).index) | (1 << Cell(8, 8).index)
+        )
+
+        # ACT
+        result = first & second
+
+        # ASSERT
+        assert list(result) == [
+            Cell(0, 0),
+            Cell(8, 8),
+        ]
+
+    def test_or_returns_union(self):
+        # ARRANGE
+        first = Cells((1 << Cell(0, 0).index) | (1 << Cell(4, 4).index))
+        second = Cells((1 << Cell(4, 4).index) | (1 << Cell(8, 8).index))
+
+        # ACT
+        result = first | second
+
+        # ASSERT
+        assert list(result) == [
+            Cell(0, 0),
+            Cell(4, 4),
+            Cell(8, 8),
+        ]
+
+    def test_invert_returns_complement(self):
+        # ARRANGE
+        cell = Cell(4, 4)
+        cells = Cells(1 << cell.index)
+
+        # ACT
+        result = ~cells
+
+        # ASSERT
+        assert len(list(result)) == 80
+        assert cell not in result
+
+    def test_invert_of_empty_cells_contains_all_81_cells(self):
+        # ARRANGE
+        cells = Cells(0)
+
+        # ACT
+        result = ~cells
+
+        # ASSERT
+        assert len(list(result)) == 81
+        assert set(result) == {Cell.from_index(index) for index in range(81)}
+
+    def test_invert_of_all_cells_contains_no_cells(self):
+        # ARRANGE
+        cells = Cells(Cells._MASK)
+
+        # ACT
+        result = ~cells
+
+        # ASSERT
+        assert list(result) == []
+
+    def test_len_gives_number_of_cells(self):
+        # ARRANGE
+        mask = (
+            (1 << Cell(0, 0).index) | (1 << Cell(4, 4).index) | (1 << Cell(8, 8).index)
+        )
+        cells = Cells(mask)
+
+        # ACT
+        length = len(cells)
+
+        # ASSERT
+        assert length == 3
+
+    def test_contians_checks_cell_is_in_cells(self):
+        # ARRANGE
+        cell = Cell(5, 3)
+        mask = 1 << cell.index
+        cells = Cells(mask)
+
+        # ACT
+        contains = cell in cells
+
+        # ASSERT
+        assert contains
+
+    def test_contians_checks_cell_is_not_in_cells(self):
+        # ARRANGE
+        cell = Cell(5, 3)
+        other_cell = Cell(4, 2)
+        mask = 1 << cell.index
+        cells = Cells(mask)
+
+        # ACT
+        contains = other_cell in cells
+
+        # ASSERT
+        assert not contains
 
 
 class TestCellIterators:

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from typing import Self
 
     from .state import GridState
@@ -56,6 +57,67 @@ class Cell:
 
     def __str__(self) -> str:
         return f"R{self.row + 1}C{self.col + 1}"
+
+
+class Cells:
+    """Represent a collection of cells.
+
+    Cells are represented by a bit mask. Bits are set in positions corresponding
+    to the indexes of cells that are included.
+    """
+
+    _MASK = (1 << 81) - 1
+
+    def __init__(self, mask):
+        self._mask = mask
+
+    def _mask_for_cell(self, cell: Cell) -> int:
+        """Get the mask for the given cell."""
+        return 1 << cell.index
+
+    def remove(self, cell: Cell):
+        """Remove the given cell."""
+        mask = self._mask_for_cell(cell)
+        self._mask &= ~mask
+
+    def add(self, cell: Cell):
+        """Add the given cell"""
+        mask = self._mask_for_cell(cell)
+        self._mask |= mask
+
+    def __and__(self, other: Cells) -> Cells:
+        """Performs an intersection on two sets of cells."""
+        mask = self._mask & other._mask
+        return Cells(mask)
+
+    def __or__(self, other: Cells) -> Cells:
+        """Performs a union on two sets of cells."""
+        mask = self._mask | other._mask
+        return Cells(mask)
+
+    def __invert__(self) -> Cells:
+        """Returns the complementary set of cells."""
+        mask = ~self._mask & self._MASK
+        return Cells(mask)
+
+    def __len__(self) -> int:
+        """Counts how many cells are in the set."""
+        return self._mask.bit_count()
+
+    def __contains__(self, cell: Cell) -> bool:
+        """Is the given cell in the set."""
+        cell_mask = self._mask_for_cell(cell)
+        return bool(cell_mask & self._mask)
+
+    def __iter__(self) -> Iterator[Cell]:
+        """Iterate over the cells."""
+        mask = self._mask
+
+        while mask:
+            bit = mask & -mask
+            index = bit.bit_length() - 1
+            yield Cell.from_index(index)
+            mask ^= bit
 
 
 class CellIterators:
